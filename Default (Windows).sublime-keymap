@@ -1,0 +1,4 @@
+[
+    { "keys": ["shift+escape"], "command": "jump_to_last_region" },
+    { "keys": ["ctrl+shift+u"], "command": "add_last_selection" }
+]
