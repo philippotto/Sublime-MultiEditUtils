@@ -41,6 +41,67 @@ class AddLastSelectionCommand(sublime_plugin.TextCommand):
 
 
 
+class CycleThroughRegionsCommand(sublime_plugin.TextCommand):
+
+	def run(self, edit):
+
+		view = self.view
+		visibleRegion = view.visible_region()
+		selectedRegions = view.sel()
+		nextRegion = None
+
+		# Find the first region which comes after the visible region.
+		for region in selectedRegions:
+			if max(region.a, region.b) > visibleRegion.b:
+				nextRegion = region
+				break
+
+		# If the last region in the buffer was reached, take the first region.
+		nextRegion = nextRegion or selectedRegions[0]
+
+		view.show(nextRegion, False)
+
+
+
+class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
+
+	def run(self, edit):
+
+		view = self.view
+		selection = view.sel()
+		if self.areRegionsNormalized(selection):
+			regions = self.invertRegions(selection)
+		else:
+			regions = self.normalizeRegions(selection)
+
+		selection.clear()
+		selection.add_all(regions)
+
+
+	def normalizeRegions(self, regions):
+
+		return self.invertRegions(regions, lambda region: region.a > region.b)
+
+
+	def invertRegions(self, regions, condition = lambda region: True):
+
+		invertedRegions = []
+
+		for region in regions:
+			if condition(region):
+				[region.a, region.b] = [region.b, region.a]
+
+			invertedRegions.append(region)
+
+		return invertedRegions
+
+
+	def areRegionsNormalized(self, regions):
+
+		return all(region.a < region.b for region in regions)
+
+
+
 class SelectionListener(sublime_plugin.EventListener):
 
 	def on_selection_modified(self, view):
