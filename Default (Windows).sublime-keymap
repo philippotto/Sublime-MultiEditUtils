@@ -2,5 +2,6 @@
     { "keys": ["shift+escape"], "command": "jump_to_last_region"   },
     { "keys": ["ctrl+alt+u"],   "command": "add_last_selection"    },
     { "keys": ["ctrl+alt+c"],   "command": "cycle_through_regions" },
-    { "keys": ["ctrl+alt+n"],   "command": "normalize_region_ends" }
+    { "keys": ["ctrl+alt+n"],   "command": "normalize_region_ends" },
+    { "keys": ["ctrl+alt+,"],   "command": "split_selection" }
 ]

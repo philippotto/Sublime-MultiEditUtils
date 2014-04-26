@@ -101,6 +101,49 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 		return all(region.a < region.b for region in regions)
 
 
+class SplitSelectionCommand(sublime_plugin.TextCommand):
+
+	def run(self, edit):
+
+		sublime.active_window().show_input_panel(
+			"Separating character(s) for splitting the selection",
+			" ",
+			self.splitSelection,
+			None,
+			None
+		)
+
+		print(inspect.getsourcefile(sublime.active_window().show_input_panel))
+
+
+	def splitSelection(self, separator):
+
+		view = self.view
+		selection = view.sel()
+
+		newRegions = []
+
+		for region in selection:
+			currentPosition = region.begin()
+			regionString = view.substr(region)
+
+			if separator:
+				subRegions = regionString.split(separator)
+			else:
+				# take each character separately
+				subRegions = list(regionString)
+
+			for subRegion in subRegions:
+				newRegion = sublime.Region(
+					currentPosition,
+					currentPosition + len(subRegion)
+				)
+				newRegions.append(newRegion)
+				currentPosition += len(subRegion) + len(separator)
+
+		selection.clear()
+		selection.add_all(newRegions)
+
 
 class SelectionListener(sublime_plugin.EventListener):
 
@@ -157,7 +200,7 @@ class Helper:
 	@staticmethod
 	def getOrConstructHelperForView(view):
 
-		mapping = viewToHelperMap
+		mapping = Helper.viewToHelperMap
 		viewID = view.id()
 
 		if not viewID in mapping.keys():
