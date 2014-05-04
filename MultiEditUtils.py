@@ -107,7 +107,7 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 
 		sublime.active_window().show_input_panel(
 			"Separating character(s) for splitting the selection",
-			" ",
+			"",
 			self.splitSelection,
 			None,
 			None
