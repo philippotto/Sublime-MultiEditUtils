@@ -34,3 +34,10 @@ When exiting multi selection mode, Sublime will set the cursor to the **first** 
 In case you want to double check your current selections, MultiEditUtils' **ctrl+alt+c** command will let you cycle through the active regions. This can come handy if the regions don't fit on one screen and you want to avoid scrolling through the whole file.
 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/04%20cycle%20through%20regions.gif)
+
+
+## Split the selection
+
+Sublime has a default command to split selections into lines, but sometimes you want to define your own splitting character(s). MultiEditUtils' **ctrl+alt+,** command will ask you for a separator and split the selection using your input. An empty separator will split the selection into its characters.
+
+![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/05%20split%20selection.gif)
