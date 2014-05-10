@@ -30,34 +30,33 @@
     <div class="wrapper">
 
       <section>
-        <div id="title">
-          <h1>Sublime-MultiEditUtils</h1>
-          <p>A Sublime Test 3 Plugin which enhances editing of multiple selections.</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/philippotto">philippotto</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
-
-        <h1>
-<a name="multieditutils" class="anchor" href="#multieditutils"><span class="octicon octicon-link"></span></a>MultiEditUtils</h1>
-
-<p>A Sublime Test 3 Plugin which enhances editing of multiple selections.</p>
-
-<a name="user-content-multieditutils" class="anchor" href="#multieditutils"><span class="octicon octicon-link"></span></a>MultiEditUtils</h1>
+<h1>
+<a name="user-content-sublime-multieditutils" class="anchor" href="#sublime-multieditutils"><span class="octicon octicon-link"></span></a><a href="http://philippotto.github.io/Sublime-MultiEditUtils/">Sublime MultiEditUtils</a>
+</h1>
 
 <p>A Sublime Test 3 Plugin which enhances editing of multiple selections. In case you aren't familar with Sublime's awesome multiple selection features, visit <a href="https://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html">this page</a>.</p>
 
 <h2>
-<a name="user-content-extend-the-current-selection-with-the-last-selection" class="anchor" href="#extend-the-current-selection-with-the-last-selection"><span class="octicon octicon-link"></span></a>Extend the current selection with the last selection</h2>
+<a name="user-content-features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
 
-<p>Sometimes Sublime's standard features for creating multiple selections won't cut it. MultiEditUtils allows to select the desired parts individually and merge the selections with one hotkey (<strong>ctrl+alt+u</strong>)</p>
+<h3>
+<a name="user-content-extend-the-current-selection-with-the-last-selection" class="anchor" href="#extend-the-current-selection-with-the-last-selection"><span class="octicon octicon-link"></span></a>Extend the current selection with the last selection</h3>
+
+<p>Sometimes Sublime's standard features for creating multiple selections won't cut it. MultiEditUtils allows to select the desired parts individually and merge the selections with the <code>add_last_selection</code> command (default keybinding is <strong>ctrl/cmd+alt+u</strong>).</p>
 
 <p><a href="https://camo.githubusercontent.com/c0c051c74dc54d8899b878520d1895dacef2c031/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f3031253230657870616e64253230776974682532306c617374253230726567696f6e2e676966" target="_blank"><img src="https://camo.githubusercontent.com/c0c051c74dc54d8899b878520d1895dacef2c031/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f3031253230657870616e64253230776974682532306c617374253230726567696f6e2e676966" alt="" data-canonical-src="http://philippotto.github.io/Sublime-MultiEditUtils/screens/01%20expand%20with%20last%20region.gif" style="max-width:100%;"></a></p>
 
-<h2>
-<a name="user-content-normalize-and-toggle-region-ends" class="anchor" href="#normalize-and-toggle-region-ends"><span class="octicon octicon-link"></span></a>Normalize and toggle region ends</h2>
+<h3>
+<a name="user-content-split-the-selection" class="anchor" href="#split-the-selection"><span class="octicon octicon-link"></span></a>Split the selection</h3>
 
-<p>When creating selections in Sublime, it can occur that the end of the selection comes before the beginning. This happens when you make the selection "backwards". To resolve this, you can normalize the regions with MultiEditUtils' <strong>ctrl+alt+n</strong> command. When executing this command a second time, all regions will be reversed.</p>
+<p>Sublime has a default command to split selections into lines, but sometimes you want to define your own splitting character(s). MultiEditUtils' <code>split_selection</code> command (default keybinding is <strong>ctrl/cmd+alt+,</strong>) will ask you for a separator and split the selection using your input. An empty separator will split the selection into its characters.</p>
+
+<p><a href="https://camo.githubusercontent.com/74899cd8980c57fbcd4b30b8aaaee390437c86ad/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f303525323073706c697425323073656c656374696f6e2e676966" target="_blank"><img src="https://camo.githubusercontent.com/74899cd8980c57fbcd4b30b8aaaee390437c86ad/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f303525323073706c697425323073656c656374696f6e2e676966" alt="" data-canonical-src="http://philippotto.github.io/Sublime-MultiEditUtils/screens/05%20split%20selection.gif" style="max-width:100%;"></a></p>
+
+<h3>
+<a name="user-content-normalize-and-toggle-region-ends" class="anchor" href="#normalize-and-toggle-region-ends"><span class="octicon octicon-link"></span></a>Normalize and toggle region ends</h3>
+
+<p>When creating selections in Sublime, it can occur that the end of the selection comes before the beginning. This happens when you make the selection "backwards". To resolve this, you can normalize the regions with MultiEditUtils' <code>normalize_region_ends</code> command (default keybinding is <strong>ctrl/cmd+alt+n</strong>). When executing this command a second time, all regions will be reversed.</p>
 
 <p><a href="https://camo.githubusercontent.com/a205cb488a6f66c58831279d537e43de68874197/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f3032612532306e6f726d616c697a65253230726567696f6e253230656e64732e676966" target="_blank"><img src="https://camo.githubusercontent.com/a205cb488a6f66c58831279d537e43de68874197/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f3032612532306e6f726d616c697a65253230726567696f6e253230656e64732e676966" alt="" data-canonical-src="http://philippotto.github.io/Sublime-MultiEditUtils/screens/02a%20normalize%20region%20ends.gif" style="max-width:100%;"></a></p>
 
@@ -65,27 +64,24 @@
 
 <p><a href="https://camo.githubusercontent.com/0800f9c182e0162a8a68c04ac8114d487eeb7f8d/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f303262253230746f67676c6525323073656c656374696f6e253230656e642e676966" target="_blank"><img src="https://camo.githubusercontent.com/0800f9c182e0162a8a68c04ac8114d487eeb7f8d/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f303262253230746f67676c6525323073656c656374696f6e253230656e642e676966" alt="" data-canonical-src="http://philippotto.github.io/Sublime-MultiEditUtils/screens/02b%20toggle%20selection%20end.gif" style="max-width:100%;"></a></p>
 
-<h2>
-<a name="user-content-jump-to-last-region" class="anchor" href="#jump-to-last-region"><span class="octicon octicon-link"></span></a>Jump to last region</h2>
+<h3>
+<a name="user-content-jump-to-last-region" class="anchor" href="#jump-to-last-region"><span class="octicon octicon-link"></span></a>Jump to last region</h3>
 
-<p>When exiting multi selection mode, Sublime will set the cursor to the <strong>first</strong> region of your previous selection. This can be annoying if the regions were scattered throughout the current buffer and you want to continue your work at the <strong>last</strong> region. To avoid this, just execute MultiEditUtils' <strong>shift+esc</strong> command and the cursor will jump to the last region.</p>
+<p>When exiting multi selection mode, Sublime will set the cursor to the <strong>first</strong> region of your previous selection. This can be annoying if the regions were scattered throughout the current buffer and you want to continue your work at the <strong>last</strong> region. To avoid this, just execute MultiEditUtils' <code>jump_to_last_region</code> command (default keybinding is <strong>shift+esc</strong>) and the cursor will jump to the last region.</p>
 
 <p><a href="https://camo.githubusercontent.com/272c7558302ac53b6eec02fdfeca66b5e1b3dd9c/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f30332532306a756d70253230746f2532306c617374253230726567696f6e2e676966" target="_blank"><img src="https://camo.githubusercontent.com/272c7558302ac53b6eec02fdfeca66b5e1b3dd9c/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f30332532306a756d70253230746f2532306c617374253230726567696f6e2e676966" alt="" data-canonical-src="http://philippotto.github.io/Sublime-MultiEditUtils/screens/03%20jump%20to%20last%20region.gif" style="max-width:100%;"></a></p>
 
-<h2>
-<a name="user-content-cycle-through-the-regions" class="anchor" href="#cycle-through-the-regions"><span class="octicon octicon-link"></span></a>Cycle through the regions</h2>
+<h3>
+<a name="user-content-cycle-through-the-regions" class="anchor" href="#cycle-through-the-regions"><span class="octicon octicon-link"></span></a>Cycle through the regions</h3>
 
-<p>In case you want to double check your current selections, MultiEditUtils' <strong>ctrl+alt+c</strong> command will let you cycle through the active regions. This can come handy if the regions don't fit on one screen and you want to avoid scrolling through the whole file.</p>
+<p>In case you want to double check your current selections, MultiEditUtils' <code>cycle_through_regions</code> command (default keybinding is <strong>ctrl/cmd+alt+c</strong>) will let you cycle through the active regions. This can come handy if the regions don't fit on one screen and you want to avoid scrolling through the whole file.</p>
 
 <p><a href="https://camo.githubusercontent.com/726931a9209f7ea8f22a5983f521d706d83eb962/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f30342532306379636c652532307468726f756768253230726567696f6e732e676966" target="_blank"><img src="https://camo.githubusercontent.com/726931a9209f7ea8f22a5983f521d706d83eb962/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f30342532306379636c652532307468726f756768253230726567696f6e732e676966" alt="" data-canonical-src="http://philippotto.github.io/Sublime-MultiEditUtils/screens/04%20cycle%20through%20regions.gif" style="max-width:100%;"></a></p>
 
 <h2>
-<a name="user-content-split-the-selection" class="anchor" href="#split-the-selection"><span class="octicon octicon-link"></span></a>Split the selection</h2>
+<a name="user-content-installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>Sublime has a default command to split selections into lines, but sometimes you want to define your own splitting character(s). MultiEditUtils' <strong>ctrl+alt+,</strong> command will ask you for a separator and split the selection using your input. An empty separator will split the selection into its characters.</p>
-
-<p><a href="https://camo.githubusercontent.com/74899cd8980c57fbcd4b30b8aaaee390437c86ad/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f303525323073706c697425323073656c656374696f6e2e676966" target="_blank"><img src="https://camo.githubusercontent.com/74899cd8980c57fbcd4b30b8aaaee390437c86ad/687474703a2f2f7068696c6970706f74746f2e6769746875622e696f2f5375626c696d652d4d756c7469456469745574696c732f73637265656e732f303525323073706c697425323073656c656374696f6e2e676966" alt="" data-canonical-src="http://philippotto.github.io/Sublime-MultiEditUtils/screens/05%20split%20selection.gif" style="max-width:100%;"></a></p>
-
+<p>Either use <a href="https://sublime.wbond.net/installation">Package Control</a> and search for <code>MultiEditUtils</code> or clone this repository into Sublime Text "Packages" directory.</p>
       </section>
 
     </div>
