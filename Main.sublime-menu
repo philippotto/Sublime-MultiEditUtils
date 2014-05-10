@@ -1,0 +1,18 @@
+[
+  {
+    "id": "selection",
+    "children":
+    [
+      {
+        "caption": "MultiEditUtils",
+        "children":[
+          { "command": "jump_to_last_region" },
+          { "command": "add_last_selection" },
+          { "command": "cycle_through_regions" },
+          { "command": "normalize_region_ends" },
+          { "command": "split_selection" }
+        ]
+      }
+    ]
+  }
+]
