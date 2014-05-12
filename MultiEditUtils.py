@@ -113,8 +113,6 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 			None
 		)
 
-		print(inspect.getsourcefile(sublime.active_window().show_input_panel))
-
 
 	def splitSelection(self, separator):
 
