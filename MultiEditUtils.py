@@ -40,7 +40,6 @@ class AddLastSelectionCommand(sublime_plugin.TextCommand):
 			self.run(edit)
 
 
-
 class CycleThroughRegionsCommand(sublime_plugin.TextCommand):
 
 	def run(self, edit):
@@ -101,27 +100,53 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 		return all(region.a < region.b for region in regions)
 
 
+
 class SplitSelectionCommand(sublime_plugin.TextCommand):
 
 	def run(self, edit):
 
+		self.savedSelection = [r for r in self.view.sel()]
+		onConfirm, onChange = self.getHandlers()
+
 		sublime.active_window().show_input_panel(
 			"Separating character(s) for splitting the selection",
 			"",
-			self.splitSelection,
-			None,
-			None
+			onConfirm,
+			onChange,
+			self.restoreSelection
 		)
+
+
+	def getHandlers(self):
+
+		settings = sublime.load_settings("MultiEditUtils.sublime-settings")
+		live_split_selection = settings.get("live_split_selection")
+
+		if live_split_selection:
+			onConfirm = None
+			onChange = self.splitSelection
+		else:
+			onConfirm = self.splitSelection
+			onChange = None
+
+		return (onConfirm, onChange)
+
+
+	def restoreSelection(self):
+
+		selection = self.view.sel()
+		selection.clear()
+		selection.add_all(self.savedSelection)
+
+		self.workaroundForRefreshBug(self, self.view, selection)
 
 
 	def splitSelection(self, separator):
 
 		view = self.view
-		selection = view.sel()
-
 		newRegions = []
 
-		for region in selection:
+		for region in self.savedSelection:
 			currentPosition = region.begin()
 			regionString = view.substr(region)
 
@@ -139,8 +164,22 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 				newRegions.append(newRegion)
 				currentPosition += len(subRegion) + len(separator)
 
+		selection = view.sel()
 		selection.clear()
 		selection.add_all(newRegions)
+
+		self.workaroundForRefreshBug(view, selection)
+
+
+	def workaroundForRefreshBug(self, view, selection):
+		# see:
+		# https://github.com/code-orchestra/colt-sublime-plugin/commit/9e6ffbf573fc60b356665ff2ba9ced614c71120f
+
+		# work around sublime bug with caret position not refreshing
+		bug = [s for s in selection]
+		view.add_regions("bug", bug, "bug", "dot", sublime.HIDDEN | sublime.PERSISTENT)
+		view.erase_regions("bug")
+
 
 
 class SelectionListener(sublime_plugin.EventListener):
