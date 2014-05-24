@@ -47,6 +47,10 @@ class CycleThroughRegionsCommand(sublime_plugin.TextCommand):
 		view = self.view
 		visibleRegion = view.visible_region()
 		selectedRegions = view.sel()
+
+		if not len(selectedRegions):
+			return
+
 		nextRegion = None
 
 		# Find the first region which comes after the visible region.
@@ -211,6 +215,10 @@ class SelectionListener(sublime_plugin.EventListener):
 		# A "complex selection" is a selection which is not empty or has multiple regions.
 
 		regionCount = len(selection)
+
+		if not regionCount:
+			return False
+
 		firstRegionLength = len(selection[0])
 
 		return regionCount > 1 or firstRegionLength > 0
