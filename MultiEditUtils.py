@@ -78,7 +78,8 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 			regions = self.normalizeRegions(selection)
 
 		selection.clear()
-		selection.add_all(regions)
+		for region in regions:
+			selection.add(region)
 
 
 	def normalizeRegions(self, regions):
@@ -91,10 +92,11 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 		invertedRegions = []
 
 		for region in regions:
+			invertedRegion = region
 			if condition(region):
-				[region.a, region.b] = [region.b, region.a]
+				invertedRegion = sublime.Region(region.b, region.a)
 
-			invertedRegions.append(region)
+			invertedRegions.append(invertedRegion)
 
 		return invertedRegions
 
@@ -140,7 +142,8 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 
 		selection = self.view.sel()
 		selection.clear()
-		selection.add_all(self.savedSelection)
+		for region in self.savedSelection:
+			selection.add(region)
 
 		self.workaroundForRefreshBug(self, self.view, selection)
 
@@ -170,7 +173,8 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 
 		selection = view.sel()
 		selection.clear()
-		selection.add_all(newRegions)
+		for region in newRegions:
+			selection.add(region)
 
 		self.workaroundForRefreshBug(view, selection)
 
