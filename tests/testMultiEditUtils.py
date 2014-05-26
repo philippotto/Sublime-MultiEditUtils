@@ -12,7 +12,7 @@ class TestHelloWorld(TestCase):
 
 	def runCommand(self, commandName, argTuple = ()):
 
-		self.view.run_command("test_multi_edit_utils", dict(commandName = commandName, argTuple = argTuple))
+		self.view.run_command("test_multi_edit_utils", dict(commandName = commandName, argTuple = list(argTuple)))
 
 
 	def tearDown(self):
@@ -25,7 +25,7 @@ class TestHelloWorld(TestCase):
 	def splitBy(self, separator, expectedAmount):
 
 		testString = "this, is, a, test"
-		self.runCommand("insertSomeText", (testString, ))
+		self.runCommand("insertSomeText", [testString])
 		self.runCommand("selectText")
 		self.view.run_command("split_selection", dict(separator = separator))
 
@@ -52,9 +52,9 @@ class TestHelloWorld(TestCase):
 	def testToggleRegionEnds(self):
 
 		testString = "this is a test"
-		self.runCommand("insertSomeText", (testString, ))
+		self.runCommand("insertSomeText", [testString])
 
-		regionTuple = (0, 14)
+		regionTuple = [0, 14]
 		self.runCommand("selectText", [regionTuple])
 
 		selection = self.view.sel()
@@ -68,9 +68,9 @@ class TestHelloWorld(TestCase):
 	def testToggleRegionEnds(self):
 
 		testString = "test test"
-		self.runCommand("insertSomeText", (testString, ))
+		self.runCommand("insertSomeText", [testString])
 
-		regionTuples = [(0, 4), (9, 5)]
+		regionTuples = [[0, 4], [9, 5]]
 		self.runCommand("selectText", regionTuples)
 
 		selection = self.view.sel()
@@ -86,9 +86,9 @@ class TestHelloWorld(TestCase):
 	def testJumpToLastRegion(self):
 
 		testString = "test test test test"
-		self.runCommand("insertSomeText", (testString, ))
+		self.runCommand("insertSomeText", [testString])
 
-		self.runCommand("selectText", [(0, 4), (5, 9)])
+		self.runCommand("selectText", [[0, 4], [5, 9]])
 
 		selection = self.view.sel()
 		self.assertEqual(len(selection), 2)
@@ -96,15 +96,15 @@ class TestHelloWorld(TestCase):
 		self.view.run_command("jump_to_last_region")
 
 		self.assertEqual(len(selection), 1)
-		self.assertRegionEqual(selection[0], (5, 5))
+		self.assertRegionEqual(selection[0], [5, 5])
 
 
 	def testAddLastSelection(self):
 
 		testString = "this is a test"
-		self.runCommand("insertSomeText", (testString, ))
+		self.runCommand("insertSomeText", [testString])
 
-		regions = [(0, 4), (5, 9)]
+		regions = [[0, 4], [5, 9]]
 		self.runCommand("selectText", [regions[0]])
 		self.runCommand("selectText", [regions[1]])
 
