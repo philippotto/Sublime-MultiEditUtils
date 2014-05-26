@@ -109,18 +109,22 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 
 class SplitSelectionCommand(sublime_plugin.TextCommand):
 
-	def run(self, edit):
+	def run(self, edit, separator = None):
 
 		self.savedSelection = [r for r in self.view.sel()]
-		onConfirm, onChange = self.getHandlers()
 
-		sublime.active_window().show_input_panel(
-			"Separating character(s) for splitting the selection",
-			"",
-			onConfirm,
-			onChange,
-			self.restoreSelection
-		)
+		if separator != None:
+			self.splitSelection(separator)
+		else:
+			onConfirm, onChange = self.getHandlers()
+
+			sublime.active_window().show_input_panel(
+				"Separating character(s) for splitting the selection",
+				"",
+				onConfirm,
+				onChange,
+				self.restoreSelection
+			)
 
 
 	def getHandlers(self):
@@ -263,3 +267,28 @@ class Helper:
 	def hashSelection(selection):
 
 		return str([region for region in selection])
+
+
+
+class TestMultiEditUtilsCommand(sublime_plugin.TextCommand):
+
+		def run(self, edit, commandName, argTuple):
+
+			getattr(self, commandName)(self.view, edit, argTuple)
+
+
+		def insertSomeText(self, view, edit, argTuple):
+
+			view.insert(edit, 0, argTuple[0])
+
+
+		def selectText(self, view, edit, regions):
+
+			if regions:
+				view.sel().clear()
+				for regionTuple in regions:
+					view.sel().add(sublime.Region(regionTuple[0], regionTuple[1]))
+			else:
+				view.run_command('select_all')
+
+			SelectionListener().on_selection_modified(view)
