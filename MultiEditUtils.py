@@ -20,7 +20,7 @@ class AddLastSelectionCommand(sublime_plugin.TextCommand):
 		helper = Helper.getOrConstructHelperForView(self.view)
 		lastSelections = helper.lastSelections
 
-		if len(lastSelections) < 2:
+		if len(lastSelections) < 1:
 			return
 
 		currentSelection = self.view.sel()
@@ -145,7 +145,7 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 		for region in self.savedSelection:
 			selection.add(region)
 
-		self.workaroundForRefreshBug(self, self.view, selection)
+		self.workaroundForRefreshBug(self.view, selection)
 
 
 	def splitSelection(self, separator):
