@@ -1,5 +1,5 @@
 import sublime, sublime_plugin
-
+import re
 
 class JumpToLastRegionCommand(sublime_plugin.TextCommand):
 
@@ -199,6 +199,53 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 
 
 
+class StripSelection(sublime_plugin.TextCommand):
+
+	def run(self, edit):
+
+		newRegions = []
+		selection = self.view.sel()
+
+		for currentRegion in selection:
+
+			text = self.view.substr(currentRegion)
+
+			lStrippedText = text.lstrip()
+			rStrippedText = text.rstrip()
+
+			lStrippedCount = len(text) - len(lStrippedText)
+			rStrippedCount = len(text) - len(rStrippedText)
+
+			a = currentRegion.begin() + lStrippedCount
+			b = currentRegion.end() - rStrippedCount
+
+			newRegions.append(sublime.Region(a, b))
+
+
+		selection.clear()
+		for region in newRegions:
+			selection.add(region)
+
+
+
+class RemoveEmptyRegions(sublime_plugin.TextCommand):
+
+	def run(self, edit):
+
+		selection = self.view.sel()
+		regions = list(selection)
+		newRegions = list(filter(lambda r: not r.empty(), regions))
+
+		if len(newRegions) == 0:
+			sublime.status_message("There are only empty regions. Removing those would remove all regions. Aborting.")
+			return
+
+		selection.clear()
+		for r in newRegions:
+			selection.add(r)
+
+
+
 class SelectionListener(sublime_plugin.EventListener):
 
 	def on_selection_modified(self, view):
@@ -214,7 +261,7 @@ class SelectionListener(sublime_plugin.EventListener):
 
 		if self.isComplexSelection(currentSelection):
 
-			currentRegions = [region for region in currentSelection]
+			currentRegions = list(currentSelection)
 			selectionWasExpanded = lastSelections and self.isSubsetOf(currentSelection, lastSelections[-1])
 
 			if selectionWasExpanded:
@@ -271,7 +318,7 @@ class Helper:
 	@staticmethod
 	def hashSelection(selection):
 
-		return str([region for region in selection])
+		return str(list(selection))
 
 
 

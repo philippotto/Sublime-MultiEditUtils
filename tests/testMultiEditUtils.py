@@ -118,8 +118,39 @@ class TestHelloWorld(TestCase):
 		self.assertRegionEqual(selection[1], regions[1])
 
 
+	def testRemoveEmptyRegions(self):
+
+		testString = "a\nb\n\nc"
+		regions = [[0, 1], [2, 3], [5, 6]]
+
+		self.runCommand("insertSomeText", [testString])
+		self.runCommand("selectText")
+		self.view.run_command("split_selection_into_lines")
+		self.view.run_command("remove_empty_regions")
+
+		selection = self.view.sel()
+
+		self.assertEqual(len(selection), 3)
+
+		for actual, expected in zip(selection, regions):
+			self.assertRegionEqual(actual, expected)
+
+
+	def testStripSelection(self):
+
+		testString = "  too much whitespace here  "
+
+		self.runCommand("insertSomeText", [testString])
+		self.runCommand("selectText")
+		self.view.run_command("strip_selection")
+
+		selection = self.view.sel()
+
+		self.assertEqual(len(selection), 1)
+		self.assertRegionEqual(selection[0], [2, 26])
+
+
 	def assertRegionEqual(self, a, b):
 
 		self.assertEqual(a.a, b[0])
 		self.assertEqual(a.b, b[1])
-

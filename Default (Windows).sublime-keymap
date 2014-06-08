@@ -3,5 +3,7 @@
     { "keys": ["ctrl+alt+u"],   "command": "add_last_selection"    },
     { "keys": ["ctrl+alt+c"],   "command": "cycle_through_regions" },
     { "keys": ["ctrl+alt+n"],   "command": "normalize_region_ends" },
-    { "keys": ["ctrl+alt+,"],   "command": "split_selection" }
+    { "keys": ["ctrl+alt+,"],   "command": "split_selection" },
+    { "keys": ["ctrl+alt+s"],   "command": "strip_selection" },
+    { "keys": ["ctrl+alt+r"],   "command": "remove_empty_regions" }
 ]
