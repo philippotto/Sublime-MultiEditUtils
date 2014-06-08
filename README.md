@@ -44,6 +44,20 @@ In case you want to double check your current selections, MultiEditUtils' ```cyc
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/04%20cycle%20through%20regions.gif)
 
 
+### Strip selection
+
+Sometimes selections contain surrounding whitespace which can get in the way of your editing. The ```strip_selection``` command strips the regions so that this whitespace gets removed.
+
+![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/06%20strip%20selection.gif)
+
+
+### Remove empty selection
+
+When splitting your selection or performing other actions on your selection, it can happen that some regions are empty while other are not. Often only the non-empty regions are of interst. The ```remove_empty_regions``` commands will take care of this and remove all empty regions from your current selection.
+
+![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/07%20remove%20empty%20selections.gif)
+
+
 ## Installation
 
 Either use [Package Control](https://sublime.wbond.net/installation) and search for `MultiEditUtils` or clone this repository into Sublime Text "Packages" directory.
