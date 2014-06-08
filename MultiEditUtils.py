@@ -113,6 +113,12 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 
 		self.savedSelection = [r for r in self.view.sel()]
 
+		selectionSize = sum(map(lambda region: region.size(), self.savedSelection))
+		if selectionSize == 0:
+			# nothing to do
+			sublime.status_message("Cannot split an empty selection.")
+			return
+
 		if separator != None:
 			self.splitSelection(separator)
 		else:
@@ -184,10 +190,9 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 
 
 	def workaroundForRefreshBug(self, view, selection):
-		# see:
-		# https://github.com/code-orchestra/colt-sublime-plugin/commit/9e6ffbf573fc60b356665ff2ba9ced614c71120f
-
 		# work around sublime bug with caret position not refreshing
+		# see: https://github.com/code-orchestra/colt-sublime-plugin/commit/9e6ffbf573fc60b356665ff2ba9ced614c71120f
+
 		bug = [s for s in selection]
 		view.add_regions("bug", bug, "bug", "dot", sublime.HIDDEN | sublime.PERSISTENT)
 		view.erase_regions("bug")
