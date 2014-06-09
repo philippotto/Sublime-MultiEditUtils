@@ -53,7 +53,7 @@ Sometimes selections contain surrounding whitespace which can get in the way of 
 
 ### Remove empty regions
 
-When splitting your selection or performing other actions on your selection, it can happen that some regions are empty while other are not. Often only the non-empty regions are of interest. The ```remove_empty_regions``` commands will take care of this and remove all empty regions from your current selection.
+When splitting your selection or performing other actions on your selection, it can happen that some regions are empty while others are not. Often only the non-empty regions are of interest. The ```remove_empty_regions``` commands will take care of this and remove all empty regions from your current selection.
 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/07%20remove%20empty%20selections.gif)
 
