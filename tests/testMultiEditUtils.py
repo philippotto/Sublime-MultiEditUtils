@@ -96,7 +96,7 @@ class TestMultiEditUtils(TestCase):
 		self.view.run_command("jump_to_last_region")
 
 		self.assertEqual(len(selection), 1)
-		self.assertRegionEqual(selection[0], [5, 5])
+		self.assertRegionEqual(selection[0], [9, 9])
 
 
 	def testAddLastSelection(self):
