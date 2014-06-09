@@ -3,7 +3,7 @@ from unittest import TestCase
 
 version = sublime.version()
 
-class TestHelloWorld(TestCase):
+class TestMultiEditUtils(TestCase):
 
 	def setUp(self):
 
@@ -148,6 +148,30 @@ class TestHelloWorld(TestCase):
 
 		self.assertEqual(len(selection), 1)
 		self.assertRegionEqual(selection[0], [2, 26])
+
+
+	def testStripSelectionWithPureWhitespace(self):
+
+		testString = "    "
+
+		self.runCommand("insertSomeText", [testString])
+		selection = self.view.sel()
+
+		# cursor should stay at the end of the line
+		self.runCommand("selectText")
+		self.view.run_command("strip_selection")
+
+		self.assertEqual(len(selection), 1)
+		self.assertRegionEqual(selection[0], [4, 4])
+
+		# cursor should be at the beginning of the line
+
+		self.runCommand("selectText")
+		self.view.run_command("normalize_region_ends")
+		self.view.run_command("strip_selection")
+
+		self.assertEqual(len(selection), 1)
+		self.assertRegionEqual(selection[0], [0, 0])
 
 
 	def assertRegionEqual(self, a, b):

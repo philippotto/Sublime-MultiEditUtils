@@ -211,13 +211,18 @@ class StripSelection(sublime_plugin.TextCommand):
 			text = self.view.substr(currentRegion)
 
 			lStrippedText = text.lstrip()
-			rStrippedText = text.rstrip()
+			rStrippedText = lStrippedText.rstrip()
 
 			lStrippedCount = len(text) - len(lStrippedText)
-			rStrippedCount = len(text) - len(rStrippedText)
+			rStrippedCount = len(lStrippedText) - len(rStrippedText)
 
 			a = currentRegion.begin() + lStrippedCount
 			b = currentRegion.end() - rStrippedCount
+
+			if a == b:
+				# the region only contained whitespace
+				# use the old selection end to avoid jumping of cursor
+				a = b = currentRegion.b
 
 			newRegions.append(sublime.Region(a, b))
 
