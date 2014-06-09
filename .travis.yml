@@ -19,6 +19,3 @@ before_script:
 
 script:
     - python $HOME/.config/sublime-text-$SUBLIME_TEXT_VERSION/Packages/UnitTesting/sbin/run.py $PACKAGE
-
-notifications:
-    email: false

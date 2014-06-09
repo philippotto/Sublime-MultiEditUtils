@@ -124,13 +124,15 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 		else:
 			onConfirm, onChange = self.getHandlers()
 
-			sublime.active_window().show_input_panel(
+			inputView = sublime.active_window().show_input_panel(
 				"Separating character(s) for splitting the selection",
-				"",
+				" ",
 				onConfirm,
 				onChange,
 				self.restoreSelection
 			)
+
+			inputView.run_command("select_all")
 
 
 	def getHandlers(self):
