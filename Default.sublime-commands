@@ -3,5 +3,7 @@
   { "command": "add_last_selection", "caption" : "MultiEditUtils: Add last selection" },
   { "command": "cycle_through_regions", "caption" : "MultiEditUtils: Cycle through regions" },
   { "command": "normalize_region_ends", "caption" : "MultiEditUtils: Normalize region ends" },
-  { "command": "split_selection", "caption" : "MultiEditUtils: Split selection" }
+  { "command": "split_selection", "caption" : "MultiEditUtils: Split selection" },
+  { "command": "strip_selection", "caption" : "Strip Selection" },
+  { "command": "remove_empty_regions", "caption" : "Remove Empty Regions" }
 ]
