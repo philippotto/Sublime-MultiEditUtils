@@ -58,6 +58,16 @@ When splitting your selection or performing other actions on your selection, it 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/07%20remove%20empty%20selections.gif)
 
 
+### Swap Selections
+
+swap between selection.
+
+### Multi Quick Find All
+
+Same as the Default but with Multi Selected texts.
+
+
+
 ## Installation
 
 Either use [Package Control](https://sublime.wbond.net/installation) and search for `MultiEditUtils` or clone this repository into Sublime Text "Packages" directory.

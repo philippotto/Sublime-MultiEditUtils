@@ -12,7 +12,9 @@
           { "command": "normalize_region_ends" },
           { "command": "split_selection" },
           { "command": "strip_selection"},
-          { "command": "remove_empty_regions"}
+          { "command": "remove_empty_regions"},
+          { "command": "multi_find_all"},
+          { "command": "swap_selections"}
         ]
       }
     ]
