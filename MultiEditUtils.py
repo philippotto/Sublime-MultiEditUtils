@@ -55,7 +55,7 @@ class CycleThroughRegionsCommand(sublime_plugin.TextCommand):
 
 		# Find the first region which comes after the visible region.
 		for region in selectedRegions:
-			if max(region.a, region.b) > visibleRegion.b:
+			if region.end() > visibleRegion.b:
 				nextRegion = region
 				break
 
@@ -72,6 +72,12 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 
 		view = self.view
 		selection = view.sel()
+
+		if not len(selection):
+			return
+
+		firstVisibleRegionIndex = self.findFirstVisibleRegionIndex()
+
 		if self.areRegionsNormalized(selection):
 			regions = self.invertRegions(selection)
 		else:
@@ -80,6 +86,18 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 		selection.clear()
 		for region in regions:
 			selection.add(region)
+
+		firstVisibleRegion = regions[firstVisibleRegionIndex]
+		view.show(firstVisibleRegion.b, False)
+
+
+	def findFirstVisibleRegionIndex(self):
+
+		visibleRegion = self.view.visible_region()
+
+		for index, region in enumerate(self.view.sel()):
+			if visibleRegion.a <= region.b and region.b <= visibleRegion.b:
+				return index
 
 
 	def normalizeRegions(self, regions):
