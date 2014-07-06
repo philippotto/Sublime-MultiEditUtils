@@ -13,8 +13,7 @@
           { "command": "split_selection" },
           { "command": "strip_selection"},
           { "command": "remove_empty_regions"},
-          { "command": "multi_find_all"},
-          { "command": "swap_selections"}
+          { "command": "multi_find_all"}
         ]
       }
     ]

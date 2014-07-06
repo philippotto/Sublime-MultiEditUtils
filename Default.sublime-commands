@@ -1,11 +1,10 @@
 [
-  { "command": "jump_to_last_region", 	"caption" : "MultiEditUtils: Jump to last region" },
-  { "command": "add_last_selection", 	"caption" : "MultiEditUtils: Add last selection" },
-  { "command": "cycle_through_regions", "caption" : "MultiEditUtils: Cycle through regions" },
-  { "command": "normalize_region_ends", "caption" : "MultiEditUtils: Normalize region ends" },
-  { "command": "split_selection", 		"caption" : "MultiEditUtils: Split selection" },
-  { "command": "strip_selection", 		"caption" : "MultiEditUtils: Strip Selection" },
-  { "command": "remove_empty_regions", 	"caption" : "MultiEditUtils: Remove Empty Regions" },
-  { "command": "multi_find_all", 		"caption" : "MultiEditUtils: Multi FindAll" },
-  { "command": "swap_selections",		"caption" : "MultiEditUtils: Swap Selections" }
+  { "command": "jump_to_last_region",  "caption" : "MultiEditUtils: Jump to last region" },
+  { "command": "add_last_selection",  "caption" : "MultiEditUtils: Add last selection" },
+  { "command": "cycle_through_regions",  "caption" : "MultiEditUtils: Cycle through regions" },
+  { "command": "normalize_region_ends",  "caption" : "MultiEditUtils: Normalize region ends" },
+  { "command": "split_selection",  "caption" : "MultiEditUtils: Split selection" },
+  { "command": "strip_selection",  "caption" : "MultiEditUtils: Strip Selection" },
+  { "command": "remove_empty_regions",  "caption" : "MultiEditUtils: Remove Empty Regions" },
+  { "command": "multi_find_all",  "caption" : "MultiEditUtils: Multi FindAll" }
 ]
