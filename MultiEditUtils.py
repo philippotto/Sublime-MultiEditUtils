@@ -96,7 +96,7 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 		visibleRegion = self.view.visible_region()
 
 		for index, region in enumerate(self.view.sel()):
-			if visibleRegion.a <= region.b and region.b <= visibleRegion.b:
+			if region.intersects(visibleRegion):
 				return index
 
 
