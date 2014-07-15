@@ -3,13 +3,15 @@ import re
 
 
 class MultiFindAllCommand(sublime_plugin.TextCommand):
-  def run(self, edit):
 
-    selected_strings = [self.view.substr(region) for region in self.view.sel()]
-    selected_strings = [string for string in selected_strings if string]
-    for string in selected_strings:
-      for region in self.view.find_all(string, sublime.LITERAL):
-        self.view.sel().add(region)
+	def run(self, edit):
+
+		view = self.view
+
+		for region in view.sel():
+			substr = view.substr(region)
+			for region in view.find_all(substr, sublime.LITERAL):
+				view.sel().add(region)
 
 
 

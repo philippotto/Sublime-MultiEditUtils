@@ -165,13 +165,32 @@ class TestMultiEditUtils(TestCase):
 		self.assertRegionEqual(selection[0], [4, 4])
 
 		# cursor should be at the beginning of the line
-
 		self.runCommand("selectText")
 		self.view.run_command("normalize_region_ends")
 		self.view.run_command("strip_selection")
 
 		self.assertEqual(len(selection), 1)
 		self.assertRegionEqual(selection[0], [0, 0])
+
+
+	def testMultiFindAll(self):
+
+		testString = "abc def - abc - def - def"
+
+		self.runCommand("insertSomeText", [testString])
+		selection = self.view.sel()
+
+		# select the first occurrences of abc and def
+		selection.add(sublime.Region(0, 3))
+		selection.add(sublime.Region(4, 7))
+
+		self.view.run_command("multi_find_all")
+
+		self.assertEqual(len(selection), 5)
+		expectedRegions = [[0, 3], [4, 7], [10, 13], [16, 19], [22, 25]]
+
+		for index, region in enumerate(expectedRegions):
+			self.assertRegionEqual(selection[index], region)
 
 
 	def assertRegionEqual(self, a, b):

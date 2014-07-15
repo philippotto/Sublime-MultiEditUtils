@@ -46,22 +46,23 @@ In case you want to double check your current selections, MultiEditUtils' ```cyc
 
 ### Strip selection
 
-Sometimes selections contain surrounding whitespace which can get in the way of your editing. The ```strip_selection``` command strips the regions so that this whitespace gets removed.
+Sometimes selections contain surrounding whitespace which can get in the way of your editing. The ```strip_selection``` command strips the regions so that this whitespace gets removed. The default keybinding is **ctrl/cmd+alt+s**.
 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/06%20strip%20selection.gif)
 
 
 ### Remove empty regions
 
-When splitting your selection or performing other actions on your selection, it can happen that some regions are empty while others are not. Often only the non-empty regions are of interest. The ```remove_empty_regions``` commands will take care of this and remove all empty regions from your current selection.
+When splitting your selection or performing other actions on your selection, it can happen that some regions are empty while others are not. Often only the non-empty regions are of interest. The ```remove_empty_regions``` commands will take care of this and remove all empty regions from your current selection. The default keybinding is **ctrl/cmd+alt+r**.
 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/07%20remove%20empty%20selections.gif)
 
 
-### Multi Quick Find All
+### Quick Find All for multiple selections
 
-Same as the Default but with Multi Selected texts.
+Similar to the built-in "Quick Find All" functionality, MultiEditUtils provides a functionality which selects all occurrences of all active selections. The default keybinding of the ```multi_find_all``` command is **ctrl/cmd+alt+f**.
 
+![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/08%20multi%20find%20all.gif)
 
 
 ## Installation
