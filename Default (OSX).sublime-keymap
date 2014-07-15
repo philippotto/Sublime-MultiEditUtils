@@ -1,9 +1,10 @@
 [
-    { "keys": ["shift+escape"], "command": "jump_to_last_region"   },
-    { "keys": ["super+alt+u"],   "command": "add_last_selection"    },
-    { "keys": ["super+alt+c"],   "command": "cycle_through_regions" },
-    { "keys": ["super+alt+n"],   "command": "normalize_region_ends" },
-    { "keys": ["super+alt+,"],   "command": "split_selection" },
-    { "keys": ["super+alt+s"],   "command": "strip_selection" },
-    { "keys": ["super+alt+r"],   "command": "remove_empty_regions" }
+    { "keys": ["shift+escape"],  "command": "jump_to_last_region" },
+    { "keys": ["super+alt+u"],  "command": "add_last_selection" },
+    { "keys": ["super+alt+c"],  "command": "cycle_through_regions" },
+    { "keys": ["super+alt+n"],  "command": "normalize_region_ends" },
+    { "keys": ["super+alt+,"],  "command": "split_selection" },
+    { "keys": ["super+alt+s"],  "command": "strip_selection" },
+    { "keys": ["super+alt+r"],  "command": "remove_empty_regions" },
+    { "keys": ["super+alt+f"],  "command": "multi_find_all" }
 ]
