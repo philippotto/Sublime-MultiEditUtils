@@ -6,5 +6,5 @@
   { "keys": ["super+alt+,"], "command": "split_selection" },
   { "keys": ["super+alt+s"], "command": "strip_selection" },
   { "keys": ["super+alt+r"], "command": "remove_empty_regions" },
-  { "keys": ["super+alt+f"], "command": "multi_find_all" }
+  { "keys": ["super+alt+j"], "command": "multi_find_all" }
 ]

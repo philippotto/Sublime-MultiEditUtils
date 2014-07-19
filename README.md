@@ -60,7 +60,7 @@ When splitting your selection or performing other actions on your selection, it 
 
 ### Quick Find All for multiple selections
 
-Similar to the built-in "Quick Find All" functionality, MultiEditUtils provides a functionality which selects all occurrences of all active selections. The default keybinding of the ```multi_find_all``` command is **ctrl/cmd+alt+f**.
+Similar to the built-in "Quick Find All" functionality, MultiEditUtils provides a functionality which selects all occurrences of all active selections. The default keybinding of the ```multi_find_all``` command is **ctrl+alt+f** (on Mac it's **cmd+alt+j**).
 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/08%20multi%20find%20all.gif)
 
