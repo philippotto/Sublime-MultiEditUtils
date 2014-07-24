@@ -74,7 +74,9 @@ class CycleThroughRegionsCommand(sublime_plugin.TextCommand):
 				break
 
 		# If the last region in the buffer was reached, take the first region.
-		nextRegion = nextRegion or selectedRegions[0]
+		# Empty regions will be evaluated falsy, which is why short-circuit evaluation doesn't work here.
+		if nextRegion is None:
+			nextRegion = selectedRegions[0]
 
 		view.show(nextRegion, False)
 
@@ -90,8 +92,6 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 		if not len(selection):
 			return
 
-		firstVisibleRegionIndex = self.findFirstVisibleRegionIndex()
-
 		if self.areRegionsNormalized(selection):
 			regions = self.invertRegions(selection)
 		else:
@@ -101,17 +101,21 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 		for region in regions:
 			selection.add(region)
 
-		firstVisibleRegion = regions[firstVisibleRegionIndex]
-		view.show(firstVisibleRegion.b, False)
+		firstVisibleRegion = self.findFirstVisibleRegion()
+		if firstVisibleRegion is not None:
+			# if firstVisibleRegion won't work with empty regions
+			view.show(firstVisibleRegion.b, False)
 
 
-	def findFirstVisibleRegionIndex(self):
+	def findFirstVisibleRegion(self):
 
 		visibleRegion = self.view.visible_region()
 
-		for index, region in enumerate(self.view.sel()):
+		for region in self.view.sel():
 			if region.intersects(visibleRegion):
-				return index
+				return region
+
+		return None
 
 
 	def normalizeRegions(self, regions):
