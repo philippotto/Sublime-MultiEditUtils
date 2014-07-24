@@ -10,11 +10,6 @@ class TestMultiEditUtils(TestCase):
 		self.view = sublime.active_window().new_file()
 
 
-	def runCommand(self, commandName, argTuple = ()):
-
-		self.view.run_command("test_multi_edit_utils", dict(commandName = commandName, argTuple = list(argTuple)))
-
-
 	def tearDown(self):
 
 		if self.view:
@@ -25,8 +20,8 @@ class TestMultiEditUtils(TestCase):
 	def splitBy(self, separator, expectedAmount):
 
 		testString = "this, is, a, test"
-		self.runCommand("insertSomeText", [testString])
-		self.runCommand("selectText")
+		self.view.run_command("insert", {"characters": testString})
+		self.view.run_command("select_all")
 		self.view.run_command("split_selection", dict(separator = separator))
 
 		selection = self.view.sel()
@@ -52,10 +47,10 @@ class TestMultiEditUtils(TestCase):
 	def testToggleRegionEnds(self):
 
 		testString = "this is a test"
-		self.runCommand("insertSomeText", [testString])
+		self.view.run_command("insert", {"characters": testString})
 
 		regionTuple = [0, 14]
-		self.runCommand("selectText", [regionTuple])
+		self.selectRegions([regionTuple])
 
 		selection = self.view.sel()
 		self.assertRegionEqual(selection[0], regionTuple)
@@ -68,10 +63,10 @@ class TestMultiEditUtils(TestCase):
 	def testToggleRegionEnds(self):
 
 		testString = "test test"
-		self.runCommand("insertSomeText", [testString])
+		self.view.run_command("insert", {"characters": testString})
 
 		regionTuples = [[0, 4], [9, 5]]
-		self.runCommand("selectText", regionTuples)
+		self.selectRegions(regionTuples)
 
 		selection = self.view.sel()
 		self.assertRegionEqual(selection[0], regionTuples[0])
@@ -86,9 +81,9 @@ class TestMultiEditUtils(TestCase):
 	def testJumpToLastRegion(self):
 
 		testString = "test test test test"
-		self.runCommand("insertSomeText", [testString])
+		self.view.run_command("insert", {"characters": testString})
 
-		self.runCommand("selectText", [[0, 4], [5, 9]])
+		self.selectRegions([[0, 4], [5, 9]])
 
 		selection = self.view.sel()
 		self.assertEqual(len(selection), 2)
@@ -102,11 +97,13 @@ class TestMultiEditUtils(TestCase):
 	def testAddLastSelection(self):
 
 		testString = "this is a test"
-		self.runCommand("insertSomeText", [testString])
+		self.view.run_command("insert", {"characters": testString})
 
 		regions = [[0, 4], [5, 9]]
-		self.runCommand("selectText", [regions[0]])
-		self.runCommand("selectText", [regions[1]])
+		self.selectRegions([regions[0]])
+		self.view.run_command("trigger_selection_modified")
+		self.selectRegions([regions[1]])
+		self.view.run_command("trigger_selection_modified")
 
 		self.view.run_command("add_last_selection")
 
@@ -123,8 +120,8 @@ class TestMultiEditUtils(TestCase):
 		testString = "a\nb\n\nc"
 		regions = [[0, 1], [2, 3], [5, 6]]
 
-		self.runCommand("insertSomeText", [testString])
-		self.runCommand("selectText")
+		self.view.run_command("insert", {"characters": testString})
+		self.view.run_command("select_all")
 		self.view.run_command("split_selection_into_lines")
 		self.view.run_command("remove_empty_regions")
 
@@ -140,8 +137,8 @@ class TestMultiEditUtils(TestCase):
 
 		testString = "  too much whitespace here  "
 
-		self.runCommand("insertSomeText", [testString])
-		self.runCommand("selectText")
+		self.view.run_command("insert", {"characters": testString})
+		self.view.run_command("select_all")
 		self.view.run_command("strip_selection")
 
 		selection = self.view.sel()
@@ -154,18 +151,18 @@ class TestMultiEditUtils(TestCase):
 
 		testString = "    "
 
-		self.runCommand("insertSomeText", [testString])
+		self.view.run_command("insert", {"characters": testString})
 		selection = self.view.sel()
 
 		# cursor should stay at the end of the line
-		self.runCommand("selectText")
+		self.view.run_command("select_all")
 		self.view.run_command("strip_selection")
 
 		self.assertEqual(len(selection), 1)
 		self.assertRegionEqual(selection[0], [4, 4])
 
 		# cursor should be at the beginning of the line
-		self.runCommand("selectText")
+		self.view.run_command("select_all")
 		self.view.run_command("normalize_region_ends")
 		self.view.run_command("strip_selection")
 
@@ -177,7 +174,7 @@ class TestMultiEditUtils(TestCase):
 
 		testString = "abc def - abc - def - def"
 
-		self.runCommand("insertSomeText", [testString])
+		self.view.run_command("insert", {"characters": testString})
 		selection = self.view.sel()
 
 		# select the first occurrences of abc and def
@@ -197,3 +194,10 @@ class TestMultiEditUtils(TestCase):
 
 		self.assertEqual(a.a, b[0])
 		self.assertEqual(a.b, b[1])
+
+
+	def selectRegions(self, regions):
+
+		self.view.sel().clear()
+		for regionTuple in regions:
+			self.view.sel().add(sublime.Region(regionTuple[0], regionTuple[1]))

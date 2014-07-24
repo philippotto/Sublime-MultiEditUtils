@@ -330,6 +330,14 @@ class SelectionListener(sublime_plugin.EventListener):
 
 
 
+class TriggerSelectionModifiedCommand(sublime_plugin.TextCommand):
+
+	def run(self, edit):
+
+		SelectionListener().on_selection_modified(self.view)
+
+
+
 class Helper:
 
 	viewToHelperMap = {}
@@ -358,28 +366,3 @@ class Helper:
 	def hashSelection(selection):
 
 		return str(list(selection))
-
-
-
-class TestMultiEditUtilsCommand(sublime_plugin.TextCommand):
-
-		def run(self, edit, commandName, argTuple):
-
-			getattr(self, commandName)(self.view, edit, argTuple)
-
-
-		def insertSomeText(self, view, edit, argTuple):
-
-			view.insert(edit, 0, argTuple[0])
-
-
-		def selectText(self, view, edit, regions):
-
-			if regions:
-				view.sel().clear()
-				for regionTuple in regions:
-					view.sel().add(sublime.Region(regionTuple[0], regionTuple[1]))
-			else:
-				view.run_command('select_all')
-
-			SelectionListener().on_selection_modified(view)
