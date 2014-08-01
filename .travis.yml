@@ -8,6 +8,7 @@ env:
         # Your package name
         - PACKAGE="MultiEditUtils"
     matrix:
+        - SUBLIME_TEXT_VERSION="2"
         - SUBLIME_TEXT_VERSION="3"
 
 before_install:
