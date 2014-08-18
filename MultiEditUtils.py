@@ -24,7 +24,7 @@ class JumpToLastRegionCommand(sublime_plugin.TextCommand):
 		cursorPosition = lastRegion.b
 		selection.clear()
 		selection.add(sublime.Region(cursorPosition))
-
+		self.view.show(cursorPosition, False)
 
 
 class AddLastSelectionCommand(sublime_plugin.TextCommand):
