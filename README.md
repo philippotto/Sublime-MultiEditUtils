@@ -68,3 +68,8 @@ Similar to the built-in "Quick Find All" functionality, MultiEditUtils provides 
 ## Installation
 
 Either use [Package Control](https://sublime.wbond.net/installation) and search for `MultiEditUtils` or clone this repository into Sublime Text "Packages" directory.
+
+
+## License
+
+MIT © Philipp Otto
