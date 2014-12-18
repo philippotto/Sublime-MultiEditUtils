@@ -1,5 +1,6 @@
 import sublime
 from unittest import TestCase
+import re
 
 version = sublime.version()
 
@@ -186,14 +187,79 @@ class TestMultiEditUtils(TestCase):
     self.assertEqual(len(selection), 5)
     expectedRegions = [[0, 3], [4, 7], [10, 13], [16, 19], [22, 25]]
 
-    for index, region in enumerate(expectedRegions):
-      self.assertRegionEqual(selection[index], region)
+    self.assertRegionsEqual(selection, expectedRegions)
+
+
+  def testDecode(self):
+
+
+    sel = self.decode_sel("┤test├ some-┤Test├ ┤TEST├")
+
+    print(sel)
+
+
+
+  def decode_sel(self, content):
+
+    splitted = re.split(r'([│┤├])', content)
+    content = ''
+    pos = 0
+    regionStart = 0
+    regions = []
+    for s in splitted:
+      if s == '│':
+        regions.append(pos)
+      elif s == '├':
+        regions.append(sublime.Region(regionStart, pos))
+      elif s == '┤':
+        regionStart = pos
+      else:
+        pos += len(s)
+        content += s
+
+    return content, regions
+
+
+  def testBasicPreserveCase(self):
+
+    testString = "┤test├ some-┤Test├ some_test Some-Test ┤TEST├"
+    testString, regions = self.decode_sel(testString)
+    self.view.run_command("insert", {"characters": testString})
+    selection = self.view.sel()
+
+    selection.add_all(regions)
+    self.view.run_command("preserve_case", {"newString": "case"})
+
+    self.assertEqual(self.view.substr(regions[0]), "case")
+    self.assertEqual(self.view.substr(regions[1]), "Case")
+    self.assertEqual(self.view.substr(regions[2]), "CASE")
+
+
+  def testAdvancedPreserveCase(self):
+
+    expectedStrings = ["some case", "some-Case", "some_case", "Some-Case", "SomeCase", "someCase", "SomeCASE"]
+    testString = "┤some test├ ┤some-Test├ ┤some_test├ ┤Some-Test├ ┤SomeTest├ ┤someTest├ ┤SomeTEST├"
+    testString, regions = self.decode_sel(testString)
+    self.view.run_command("insert", {"characters": testString})
+    selection = self.view.sel()
+
+    selection.add_all(regions)
+    self.view.run_command("preserve_case", {"newString": "some case"})
+
+    for region, expectedString in zip(regions, expectedStrings):
+      self.assertEqual(self.view.substr(region), expectedString)
 
 
   def assertRegionEqual(self, a, b):
 
     self.assertEqual(a.a, b[0])
     self.assertEqual(a.b, b[1])
+
+
+  def assertRegionsEqual(self, selection, expectedRegions):
+
+    for index, region in enumerate(expectedRegions):
+      self.assertRegionEqual(selection[index], region)
 
 
   def selectRegions(self, regions):

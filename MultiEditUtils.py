@@ -1,6 +1,6 @@
 import sublime, sublime_plugin
 import re
-
+from collections import namedtuple
 
 class MultiFindAllCommand(sublime_plugin.TextCommand):
 
@@ -234,6 +234,123 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
     bug = [s for s in selection]
     view.add_regions("bug", bug, "bug", "dot", sublime.HIDDEN | sublime.PERSISTENT)
     view.erase_regions("bug")
+
+
+
+Case = namedtuple("Case", "lower upper capitalized mixed")(1, 2, 3, 4)
+StringMetaData = namedtuple("StringMetaData", "separator cases stringGroups")
+
+
+class PreserveCaseCommand(sublime_plugin.TextCommand):
+
+  def run(self, edit, newString = None):
+
+    self.edit = edit
+    self.savedSelection = [r for r in self.view.sel()]
+
+    selectionSize = sum(map(lambda region: region.size(), self.savedSelection))
+    if selectionSize == 0:
+      sublime.status_message("Cannot preserve case an empty selection.")
+      return
+
+    if newString != None:
+      self.preserveCase(newString)
+    else:
+      inputView = sublime.active_window().show_input_panel(
+        "New string for preserving case",
+        "",
+        self.runPreserveCase,
+        None,
+        None
+      )
+
+
+  def runPreserveCase(self, newString):
+
+    self.view.run_command("preserve_case", {"newString": newString})
+
+
+  def preserveCase(self, newString):
+
+    view = self.view
+    regionOffset = 0
+    newStringGroups = self.analyzeString(newString).stringGroups
+
+    for region in self.savedSelection:
+      region = sublime.Region(region.begin() + regionOffset, region.end() + regionOffset)
+      regionString = view.substr(region)
+
+      newRegionString = self.replaceStringWithCase(regionString, newStringGroups)
+      view.replace(self.edit, region, newRegionString)
+      regionOffset += len(newRegionString) - len(regionString)
+
+
+  def analyzeString(self, aString):
+
+    separators = "-_/. "
+    counts = list(map(lambda sep: aString.count(sep), separators))
+    maxCounts = max(counts)
+
+    if max(counts) > 0:
+      separator = separators[counts.index(maxCounts)]
+      stringGroups = aString.split(separator)
+    else:
+      # no real separator
+      separator = ""
+      stringGroups = self.splitByCase(aString)
+
+    cases = list(map(self.analyzeCase, stringGroups))
+
+    return StringMetaData(separator, cases, stringGroups)
+
+
+  def splitByCase(self, aString):
+
+    # split at the change from lower to upper case (or vice versa)
+    # groups = re.split('(?<!^)((?:[^A-Z][A-Z])|(?:[A-Z]{2,}[^A-Z]))', aString)
+    groups = re.split('(?<!^)((?:[^A-Z][^a-z])|(?:[^a-z][^A-Z]))', aString)
+    newGroups = [groups[0]]
+    for index, group in enumerate(groups):
+      if index % 2 == 1:
+        newGroups[-1] += group[0:-1]
+        newGroups.append(group[-1] + groups[index + 1])
+
+    return newGroups
+
+
+  def analyzeCase(self, aString):
+
+    lowerReg = re.compile("^[^A-Z]*$")
+    upperReg = re.compile("^[^a-z]*$")
+    capitalizedReg = re.compile("^[A-Z]([^A-Z])*$")
+
+    if lowerReg.match(aString):
+      return Case.lower
+    elif upperReg.match(aString):
+      return Case.upper
+    elif capitalizedReg.match(aString):
+      return Case.capitalized
+    else:
+      return Case.mixed
+
+
+  def replaceStringWithCase(self, oldString, newStringGroups):
+
+    analyzedOldString = self.analyzeString(oldString)
+    oldCases = analyzedOldString.cases
+    oldSeparator = analyzedOldString.separator
+
+    for index, currentCase in enumerate(oldCases):
+      currentElement = newStringGroups[index]
+
+      if currentCase == Case.upper:
+        newStringGroups[index] = currentElement.upper()
+      elif currentCase == Case.lower:
+        newStringGroups[index] = currentElement.lower()
+      elif currentCase == Case.capitalized:
+        newStringGroups[index] = currentElement.capitalize()
+
+    return oldSeparator.join(newStringGroups)
 
 
 
