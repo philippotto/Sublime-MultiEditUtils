@@ -340,8 +340,11 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
     oldCases = analyzedOldString.cases
     oldSeparator = analyzedOldString.separator
 
-    for index, currentCase in enumerate(oldCases):
-      currentElement = newStringGroups[index]
+    for index, currentElement in enumerate(newStringGroups):
+      # If the user provides more new strings than old ones are given, we just
+      # repeat the last case.
+      clampedIndex = min(index, len(oldCases) - 1)
+      currentCase = oldCases[clampedIndex]
 
       if currentCase == Case.upper:
         newStringGroups[index] = currentElement.upper()

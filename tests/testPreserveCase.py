@@ -43,7 +43,7 @@ class TestPreserveCase(TestCase):
 
 
 
-  def testReplaceStringWithCase(self):
+  def testReplaceStringWithCase_Equal(self):
 
     oldString = "test-TEST-Test"
     newStringGroups = ["case", "case", "case"]
@@ -51,3 +51,19 @@ class TestPreserveCase(TestCase):
 
     self.assertEqual(replacedString, "case-CASE-Case")
 
+  def testReplaceStringWithCase_Less(self):
+
+    oldString = "test-TEST-Test"
+    newStringGroups = ["case", "case"]
+    replacedString = self.cmd.replaceStringWithCase(oldString, newStringGroups)
+
+    self.assertEqual(replacedString, "case-CASE")
+
+
+  def testReplaceStringWithCase_More(self):
+
+    oldString = "test-TEST-Test"
+    newStringGroups = ["case", "case", "case", "case"]
+    replacedString = self.cmd.replaceStringWithCase(oldString, newStringGroups)
+
+    self.assertEqual(replacedString, "case-CASE-Case-Case")
