@@ -5,6 +5,10 @@
   { "keys": ["ctrl+alt+n"], "command": "normalize_region_ends" },
   { "keys": ["ctrl+alt+,"], "command": "split_selection" },
   { "keys": ["ctrl+alt+s"], "command": "strip_selection" },
-  { "keys": ["ctrl+alt+r"], "command": "remove_empty_regions" },
+  { "keys": ["ctrl+alt+r"], "command": "remove_empty_regions", "context":
+    [
+      {"key": "setting.is_widget", "operator": "equal", "operand": false}
+    ]
+  },
   { "keys": ["ctrl+alt+f"], "command": "multi_find_all" }
 ]
