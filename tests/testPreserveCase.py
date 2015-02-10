@@ -4,7 +4,10 @@ from unittest import TestCase
 import os.path, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
-from MultiEditUtils import MultiEditUtils
+try:
+  from MultiEditUtils.MultiEditUtils import MultiEditUtils
+except:
+  from MultiEditUtils import MultiEditUtils
 
 version = sublime.version()
 
