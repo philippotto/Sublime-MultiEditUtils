@@ -1,0 +1,7 @@
+MultiEditUtils Changelog
+
+- added "Preserve Case" feature (available via command palette) to simulatenously change something like "someIdentifier" in the following code:
+	someIdentifier
+	SOME_IDENTIFIER
+	usingSomeIdentifier
+- more information here: https://github.com/philippotto/Sublime-MultiEditUtils

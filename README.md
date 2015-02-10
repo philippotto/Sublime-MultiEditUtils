@@ -19,6 +19,13 @@ Sublime has a default command to split selections into lines, but sometimes you 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/05%20split%20selection.gif)
 
 
+### Preserve case while editing selection contents
+
+When multi-selecting all occurences of an identifier it is cumbersome to change it to another one if the case differs (camelCase, PascalCase, UPPER CASE etc.). The "Preserve case" feature facilitates this. Just invoke "Preserve case" via the command palette and type in the new identifier.
+
+![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/preserve-case.gif)
+
+
 ### Normalize and toggle region ends
 
 When creating selections in Sublime, it can occur that the end of the selection comes before the beginning. This happens when you make the selection "backwards". To resolve this, you can normalize the regions with MultiEditUtils' ```normalize_region_ends``` command (default keybinding is **ctrl/cmd+alt+n**). When executing this command a second time, all regions will be reversed.
