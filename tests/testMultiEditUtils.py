@@ -1,3 +1,5 @@
+# coding: utf8
+
 import sublime
 from unittest import TestCase
 import re
@@ -193,7 +195,7 @@ class TestMultiEditUtils(TestCase):
   def testDecode(self):
 
 
-    sel = self.decode_sel("┤test├ some-┤Test├ ┤TEST├")
+    sel = self.decode_sel(">test< some->Test< >TEST<")
 
     print(sel)
 
@@ -201,7 +203,7 @@ class TestMultiEditUtils(TestCase):
 
   def decode_sel(self, content):
 
-    splitted = re.split(r'([│┤├])', content)
+    splitted = re.split(r'([│><])', content)
     content = ''
     pos = 0
     regionStart = 0
@@ -209,9 +211,9 @@ class TestMultiEditUtils(TestCase):
     for s in splitted:
       if s == '│':
         regions.append(pos)
-      elif s == '├':
+      elif s == '<':
         regions.append(sublime.Region(regionStart, pos))
-      elif s == '┤':
+      elif s == '>':
         regionStart = pos
       else:
         pos += len(s)
@@ -222,12 +224,14 @@ class TestMultiEditUtils(TestCase):
 
   def testBasicPreserveCase(self):
 
-    testString = "┤test├ some-┤Test├ some_test Some-Test ┤TEST├"
+    testString = ">test< some->Test< some_test Some-Test >TEST<"
     testString, regions = self.decode_sel(testString)
     self.view.run_command("insert", {"characters": testString})
     selection = self.view.sel()
 
-    selection.add_all(regions)
+    for region in regions:
+      selection.add(region)
+
     self.view.run_command("preserve_case", {"newString": "case"})
 
     self.assertEqual(self.view.substr(regions[0]), "case")
@@ -238,12 +242,14 @@ class TestMultiEditUtils(TestCase):
   def testAdvancedPreserveCase(self):
 
     expectedStrings = ["some case", "some-Case", "some_case", "Some-Case", "SomeCase", "someCase", "SomeCASE"]
-    testString = "┤some test├ ┤some-Test├ ┤some_test├ ┤Some-Test├ ┤SomeTest├ ┤someTest├ ┤SomeTEST├"
+    testString = ">some test< >some-Test< >some_test< >Some-Test< >SomeTest< >someTest< >SomeTEST<"
     testString, regions = self.decode_sel(testString)
     self.view.run_command("insert", {"characters": testString})
     selection = self.view.sel()
 
-    selection.add_all(regions)
+    for region in regions:
+      selection.add(region)
+
     self.view.run_command("preserve_case", {"newString": "some case"})
 
     for region, expectedString in zip(regions, expectedStrings):

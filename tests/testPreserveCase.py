@@ -1,15 +1,16 @@
 import sublime
 from unittest import TestCase
+version = sublime.version()
 
 import os.path, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
-try:
-  from MultiEditUtils.MultiEditUtils import MultiEditUtils
-except:
-  from MultiEditUtils import MultiEditUtils
-
 version = sublime.version()
+if int(version) > 3000:
+  from MultiEditUtils import MultiEditUtils
+else:
+  import MultiEditUtils
+
 
 class TestPreserveCase(TestCase):
 
@@ -23,6 +24,13 @@ class TestPreserveCase(TestCase):
     if self.view:
       self.view.set_scratch(True)
       self.view.window().run_command("close_file")
+
+  def assertListEqual(self, listA, listB):
+
+    self.assertEqual(len(listA), len(listB))
+
+    for idx, el in enumerate(listA):
+      self.assertEqual(el, listB[idx])
 
 
   def testAnalyzeString(self):
