@@ -7,12 +7,15 @@ class MultiFindAllCommand(sublime_plugin.TextCommand):
   def run(self, edit):
 
     view = self.view
+    newRegions = []
 
     for region in view.sel():
       substr = view.substr(region)
       for region in view.find_all(substr, sublime.LITERAL):
-        view.sel().add(region)
+        newRegions.append(region)
 
+    for region in newRegions:
+      view.sel().add(region)
 
 
 class JumpToLastRegionCommand(sublime_plugin.TextCommand):
