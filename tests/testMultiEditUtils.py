@@ -181,6 +181,7 @@ class TestMultiEditUtils(TestCase):
     selection = self.view.sel()
 
     # select the first occurrences of abc and def
+    selection.clear()
     selection.add(sublime.Region(0, 3))
     selection.add(sublime.Region(4, 7))
 
