@@ -21,7 +21,7 @@ Sublime has a default command to split selections into lines, but sometimes you 
 
 ### Preserve case while editing selection contents
 
-When multi-selecting all occurences of an identifier it is cumbersome to change it to another one if the case differs (camelCase, PascalCase, UPPER CASE etc.). The "Preserve case" feature facilitates this. Just invoke "Preserve case" via the command palette and type in the new identifier.
+When multi-selecting all occurences of an identifier it is cumbersome to change it to another one if the case differs (camelCase, PascalCase, UPPER CASE and even cases with separators like snake_case, dash-case, dot.case etc.). The "Preserve case" feature facilitates this. Just invoke "Preserve case" via the command palette (or define an own keybinding) and type in the new identifier.
 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/preserve-case.gif)
 
