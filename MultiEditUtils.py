@@ -253,19 +253,21 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
 
     selectionSize = sum(map(lambda region: region.size(), self.savedSelection))
     if selectionSize == 0:
-      sublime.status_message("Cannot preserve case an empty selection.")
+      sublime.status_message("Cannot run preserve case on an empty selection.")
       return
 
     if newString != None:
       self.preserveCase(newString)
     else:
+      firstRegionString = self.view.substr(self.savedSelection[0])
       inputView = sublime.active_window().show_input_panel(
         "New string for preserving case",
-        "",
+        firstRegionString,
         self.runPreserveCase,
         None,
         None
       )
+      inputView.run_command("select_all")
 
 
   def runPreserveCase(self, newString):
