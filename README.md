@@ -72,6 +72,46 @@ Similar to the built-in "Quick Find All" functionality, MultiEditUtils provides 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/08%20multi%20find%20all.gif)
 
 
+### Use selections as fields
+
+Converts the selections to fields similar to the fields used in snippets. When the `selection_fields` command is executed, all current selections are saved as fields, which can be activated one by one. The first field is activated automatically. You can jump to the next field with **tab** (or the default keybinding) and to the previous field with **shift+tab**. If you jump behind the last field or press **escape** all fields will be converted to proper selections again. If you press **shift+escape** all fields will be removed and the current selection remains unchanged.
+
+![demo_selection_fields](https://cloud.githubusercontent.com/assets/12573621/14402686/17391716-fe3d-11e5-8fba-4e52a4f93459.gif)
+
+You can bind this command to a keybinding by adding the following to your keymap (Change the key to the keybinding you prefer):
+
+``` js
+{ "keys": ["alt+d"], "command": "selection_fields" },
+```
+
+Although using one keybinding with the default options should be sufficient for most cases, additional modes and arguments are possible. Feel free to ignore or use them as you wish.
+
+Arguments:
+
+- `mode` (`"smart"`) is the executing mode, which defines the executed action. Possible modes are:
+    + `"push"` to push the current selection as fields. This will overwrite already pushed fields.
+    + `"pop"` to pop the pushed fields as selections
+    + `"remove"` to remove the pushed fields without adding them to the selection. This has the same behavior as pop if `only_other` is `true`.
+    + `"add"` to add the current selection to the pushed fields
+    + `"subtract"` to subtract the current selection from the pushed fields
+    + `"smart"` to try to detect whether to push, pop or jump to the next field
+    + `"toggle"` to pop if fields are pushed, else push the selections as fields.
+    + `"cycle"` to push or go next. This will cycle, i.e. go to the first if the last field is reached, never pops
+- `jump_forward` (`true`) can be `true` to jump forward and `false` to jump backward
+- `only_other` (`false`) ignores the current selection for pop and go next actions.
+
+Suggestion for more keybindings based on the arguments:
+``` js
+// default use of selection_fields
+{ "keys": ["alt+d"], "command": "selection_fields" },
+// jump and remove current selection in selection_fields
+{ "keys": ["ctrl+alt+d"], "command": "selection_fields",
+  "args": {"mode": "smart", "only_other": true} },
+// cancel selection_fields and remove current selection
+{ "keys": ["ctrl+alt+shift+d"], "command": "selection_fields",
+  "args": {"mode": "toggle", "only_other": true} },
+```
+
 ## Installation
 
 Either use [Package Control](https://sublime.wbond.net/installation) and search for `MultiEditUtils` or clone this repository into Sublime Text "Packages" directory.
