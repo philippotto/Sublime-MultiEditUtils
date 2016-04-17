@@ -1,3 +1,7 @@
 {
-  "live_split_selection" : true
+  "live_split_selection" : true,
+  // whether the tab key should jump to the next field during the selection field mode
+  "selection_fields_tab_enabled": true,
+  // whether the escape key should cancel the selection field mode
+  "selection_fields_escape_enabled": true
 }

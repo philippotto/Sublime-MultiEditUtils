@@ -10,5 +10,51 @@
       {"key": "setting.is_widget", "operator": "equal", "operand": false}
     ]
   },
-  { "keys": ["super+alt+j"], "command": "multi_find_all" }
+  { "keys": ["super+alt+j"], "command": "multi_find_all" },
+  { "keys": ["super+alt+d"], "command": "selection_fields", "args": {"mode": "smart"} },
+  { "keys": ["escape"], "command": "selection_fields",
+    "args": {"mode": "pop"},
+    "context":
+    [
+      { "key": "is_selection_field" },
+      { "key": "selection_fields_escape_enabled" },
+      // set the default precedence to be less than snippet fields
+      { "key": "has_next_field", "operator": "equal", "operand": false },
+      { "key": "has_prev_field", "operator": "equal", "operand": false },
+      { "key": "panel_visible", "operator": "equal", "operand": false },
+      { "key": "overlay_visible", "operator": "equal", "operand": false },
+      // usually we would use popup_visible, but this is ST3 only
+      { "key": "meu_popup_visible_proxy", "operator": "equal", "operand": false },
+      { "key": "auto_complete_visible", "operator": "equal", "operand": false }
+    ]
+  },
+  { "keys": ["shift+escape"], "command": "selection_fields",
+    "args": {"mode": "remove"},
+    "context":
+    [
+      { "key": "is_selection_field" },
+      { "key": "selection_fields_escape_enabled" }
+    ]
+  },
+  { "keys": ["tab"], "command": "selection_fields",
+    "args": {"mode": "smart"},
+    "context":
+    [
+      { "key": "is_selection_field" },
+      { "key": "selection_fields_tab_enabled" },
+      // set the default precedence to be less than snippet fields
+      { "key": "has_next_field", "operator": "equal", "operand": false },
+      { "key": "auto_complete_visible", "operator": "equal", "operand": false }
+    ]
+  },
+  { "keys": ["shift+tab"], "command": "selection_fields",
+    "args": {"mode": "cycle", "jump_forward": false },
+    "context":
+    [
+      { "key": "is_selection_field" },
+      { "key": "selection_fields_tab_enabled" },
+      // set the default precedence to be less than snippet fields
+      { "key": "has_prev_field", "operator": "equal", "operand": false }
+    ]
+  }
 ]
