@@ -246,10 +246,13 @@ StringMetaData = namedtuple("StringMetaData", "separator cases stringGroups")
 
 class PreserveCaseCommand(sublime_plugin.TextCommand):
 
-  def run(self, edit, newString = None):
+  def run(self, edit, newString = None, selections = None):
 
     self.edit = edit
-    self.savedSelection = [r for r in self.view.sel()]
+    if selections is not None:
+      self.savedSelection = [sublime.Region(r[0], r[1]) for r in selections]
+    else:
+      self.savedSelection = [r for r in self.view.sel()]
 
     selectionSize = sum(map(lambda region: region.size(), self.savedSelection))
     if selectionSize == 0:
@@ -271,8 +274,8 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
 
 
   def runPreserveCase(self, newString):
-
-    self.view.run_command("preserve_case", {"newString": newString})
+    selections = [[s.a, s.b] for s in self.savedSelection]
+    self.view.run_command("preserve_case", {"newString": newString, "selections": selections})
 
 
   def preserveCase(self, newString):
