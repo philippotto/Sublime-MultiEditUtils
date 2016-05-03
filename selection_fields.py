@@ -157,7 +157,8 @@ class SelectionFieldsCommand(sublime_plugin.TextCommand):
             return
         view = self.view
         has_fields = bool(_get_fields(view))
-        has_only_added_fields = not _get_fields(view, added_fields=False)
+        has_only_added_fields = (not _get_fields(view, added_fields=False) and
+                                 _get_settings("add_separated", True))
         do_push = {
             "pop": False,
             "remove": False,
