@@ -12,16 +12,34 @@ else:
 _SCOPE = "comment"
 
 
+def get_settings(key, default=None):
+    """Get the setting specified by the key."""
+    settings = sublime.load_settings("MultiEditUtils.sublime-settings")
+    return settings.get(key, default)
+
+
+def _get_settings(key, default=None):
+    """
+    Get the setting specified by the key,
+    with the prefix `selection_fields.`.
+    """
+    return get_settings("selection_fields.{0}".format(key), default)
+
+
 def _set_fields(view, regions, added_fields=False):
     """Set the fields as regions in the view."""
     # push the fields to the view, kwargs for ST3 and pos args for ST2
-    reg_name = ("meu_sf_stored_selections" if not added_fields
-                else "meu_sf_added_selections")
-    if _ST3:
-        view.add_regions(reg_name, regions, scope=_SCOPE,
-                         flags=_FLAGS)
+    if not added_fields:
+        reg_name = "meu_sf_stored_selections"
+        scope_setting = "scope.fields"
     else:
-        view.add_regions(reg_name, regions, _SCOPE, _FLAGS)
+        reg_name = "meu_sf_added_selections"
+        scope_setting = "scope.added_fields"
+    scope = _get_settings(scope_setting, "comment")
+    if _ST3:
+        view.add_regions(reg_name, regions, scope=scope, flags=_FLAGS)
+    else:
+        view.add_regions(reg_name, regions, scope, _FLAGS)
 
 
 def _get_fields(view, added_fields=True):
@@ -215,8 +233,7 @@ class SelectionFieldsContext(sublime_plugin.EventListener):
             result = bool(_get_fields(view))
         else:
             # the *_enabled key has the same name in the settings
-            settings = sublime.load_settings("MultiEditUtils.sublime-settings")
-            result = settings.get(key, False)
+            result = get_settings(key, False)
 
         if operator == sublime.OP_EQUAL:
             result = result == operand
