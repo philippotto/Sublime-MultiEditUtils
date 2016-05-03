@@ -101,9 +101,12 @@ Arguments:
 - `only_other` (`false`) ignores the current selection for pop and go next actions.
 
 Suggestion for more keybindings based on the arguments:
+
 ``` js
 // default use of selection_fields
 { "keys": ["alt+d"], "command": "selection_fields" },
+// add the current selections as a fields
+{ "keys": ["alt+a"], "command": "selection_fields", "args": {"mode": "add"} },
 // jump and remove current selection in selection_fields
 { "keys": ["ctrl+alt+d"], "command": "selection_fields",
   "args": {"mode": "smart", "only_other": true} },
