@@ -2,6 +2,7 @@
   { "command": "jump_to_last_region", "caption" : "MultiEditUtils: Jump to last region" },
   { "command": "add_last_selection", "caption" : "MultiEditUtils: Add last selection" },
   { "command": "selection_fields", "caption": "MultiEditUtils: Selection as Fields", "args": {"mode": "toggle"} },
+  { "command": "selection_fields", "caption": "MultiEditUtils: Selection as Fields - Add Selections to Fields", "args": {"mode": "add"} },
   { "command": "cycle_through_regions", "caption" : "MultiEditUtils: Cycle through regions" },
   { "command": "normalize_region_ends", "caption" : "MultiEditUtils: Normalize region ends" },
   { "command": "split_selection", "caption" : "MultiEditUtils: Split selection" },
