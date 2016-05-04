@@ -9,8 +9,6 @@ if _ST3:
 else:
     _FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
 
-_SCOPE = "comment"
-
 
 def get_settings(key, default=None):
     """Get the setting specified by the key."""
@@ -47,6 +45,10 @@ def _get_fields(view, added_fields=True):
     if added_fields:
         fields.extend(view.get_regions("meu_sf_added_selections"))
     return fields
+
+
+def _erase_added_fields(view):
+    view.erase_regions("meu_sf_added_selections")
 
 
 def _erase_fields(view):
@@ -177,7 +179,8 @@ class SelectionFieldsCommand(sublime_plugin.TextCommand):
             sel_regions = list(view.sel())
             pushed_regions = _get_fields(view)
             regions = list(_subtract_selection(pushed_regions, sel_regions))
-            _set_fields(view, regions)
+            _erase_added_fields(view)
+            _set_fields(view, regions, added_fields=has_only_added_fields)
         elif mode == "add":  # add selections to the pushed fields
             pushed_regions = _get_fields(view)
             sel_regions = list(view.sel())
