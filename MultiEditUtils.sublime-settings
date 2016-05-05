@@ -1,5 +1,12 @@
 {
   "live_split_selection" : true,
+  // the highlighting scope of fields
+  "selection_fields.scope.fields": "comment",
+  // the highlighting scope of fields added via the `add` mode
+  "selection_fields.scope.added_fields": "none",
+  // whether the add command of selection fields should add separated field,
+  // such that the special keybindings are not enabled via the add command
+  "selection_fields.add_separated": true,
   // whether the tab key should jump to the next field during the selection field mode
   "selection_fields_tab_enabled": true,
   // whether the escape key should cancel the selection field mode
