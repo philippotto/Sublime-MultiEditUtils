@@ -121,7 +121,7 @@ Either use [Package Control](https://sublime.wbond.net/installation) and search 
 
 ## Shortcut Cheat Sheet
 
-![multieditutilscheatsheetmain](https://user-images.githubusercontent.com/2641327/27285539-57bd445c-54fd-11e7-867f-2e3a264c7d35.png)
+[![multieditutilscheatsheetmain](https://user-images.githubusercontent.com/2641327/27285539-57bd445c-54fd-11e7-867f-2e3a264c7d35.png)](https://github.com/philippotto/Sublime-MultiEditUtils/files/1084890/multiEditUtilsCheatsheetMain.pdf)
 
 Thank you [@AllanLRH](https://github.com/AllanLRH) for creating this cheat sheet!
 
