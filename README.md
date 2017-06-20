@@ -119,6 +119,11 @@ Suggestion for more keybindings based on the arguments:
 
 Either use [Package Control](https://sublime.wbond.net/installation) and search for `MultiEditUtils` or clone this repository into Sublime Text "Packages" directory.
 
+## Shortcut Cheat Sheet
+
+![multieditutilscheatsheetmain](https://user-images.githubusercontent.com/2641327/27285539-57bd445c-54fd-11e7-867f-2e3a264c7d35.png)
+
+Thank you [@AllanLRH](https://github.com/AllanLRH) for creating this cheat sheet!
 
 ## License
 
