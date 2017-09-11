@@ -5,11 +5,11 @@ A Sublime Text 2/3 Plugin which enhances editing of multiple selections. In case
 
 ## Features
 
-### Extend the current selection with the last selection
+### Preserve case while editing selection contents
 
-Sometimes Sublime's standard features for creating multiple selections won't cut it. MultiEditUtils allows to select the desired parts individually and merge the selections with the ```add_last_selection``` command (default keybinding is **ctrl/cmd+alt+u**).
+When multi-selecting all occurences of an identifier it is cumbersome to change it to another one if the case differs (camelCase, PascalCase, UPPER CASE and even cases with separators like snake_case, dash-case, dot.case etc.). The "Preserve case" feature facilitates this. Just invoke "Preserve case" via the command palette (or define an own keybinding) and type in the new identifier.
 
-![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/01%20expand%20with%20last%20region.gif)
+![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/preserve-case.gif)
 
 
 ### Split the selection
@@ -19,11 +19,11 @@ Sublime has a default command to split selections into lines, but sometimes you 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/05%20split%20selection.gif)
 
 
-### Preserve case while editing selection contents
+### Extend the current selection with the last selection
 
-When multi-selecting all occurences of an identifier it is cumbersome to change it to another one if the case differs (camelCase, PascalCase, UPPER CASE and even cases with separators like snake_case, dash-case, dot.case etc.). The "Preserve case" feature facilitates this. Just invoke "Preserve case" via the command palette (or define an own keybinding) and type in the new identifier.
+Sometimes Sublime's standard features for creating multiple selections won't cut it. MultiEditUtils allows to select the desired parts individually and merge the selections with the ```add_last_selection``` command (default keybinding is **ctrl/cmd+alt+u**).
 
-![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/preserve-case.gif)
+![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/01%20expand%20with%20last%20region.gif)
 
 
 ### Normalize and toggle region ends
