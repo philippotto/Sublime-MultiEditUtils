@@ -4,15 +4,38 @@ from collections import namedtuple
 
 class MultiFindAllCommand(sublime_plugin.TextCommand):
 
-  def run(self, edit):
+  def run(self, edit, case=True, word=False, ignore_comments=False):
 
     view = self.view
     newRegions = []
+    selected_words = [view.substr(view.word(sel)).lower() for sel in view.sel()]
 
     for region in view.sel():
       substr = view.substr(region)
-      for region in view.find_all(substr, sublime.LITERAL):
-        newRegions.append(region)
+
+      if case:
+          for region in view.find_all(substr, sublime.LITERAL):
+            newRegions.append(region)
+      else:
+          for region in view.find_all(substr, sublime.LITERAL | sublime.IGNORECASE):
+            newRegions.append(region)
+
+      if word:
+        deleted = []
+        for region in newRegions:
+          if view.substr(view.word(region)).lower() not in selected_words:
+            deleted.append(region)
+        newRegions = [region for region in newRegions if region not in deleted]
+
+      if ignore_comments:
+        deleted = []
+        for region in newRegions:
+          scope = view.scope_name(region.begin())
+          comment = re.search(r'\bcomment\b', scope)
+          if comment:
+            print(comment.group(0))
+            deleted.append(region)
+        newRegions = (region for region in newRegions if region not in deleted)
 
     for region in newRegions:
       view.sel().add(region)
