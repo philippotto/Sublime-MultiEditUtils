@@ -33,7 +33,6 @@ class MultiFindAllCommand(sublime_plugin.TextCommand):
           scope = view.scope_name(region.begin())
           comment = re.search(r'\bcomment\b', scope)
           if comment:
-            print(comment.group(0))
             deleted.append(region)
         newRegions = (region for region in newRegions if region not in deleted)
 

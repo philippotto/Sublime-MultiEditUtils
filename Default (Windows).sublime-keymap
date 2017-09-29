@@ -11,8 +11,10 @@
     ]
   },
 
-  // multi find all - the first is the same behaviour as old [alt+f3], and it's the same as [alt+f3, ctrl+w], incuded for consistency
-  { "keys": ["alt+f3", "alt+f3"],     "command": "multi_find_all", "args": {"case": false, "word": true}},
+  // multi find all - the first is the same behaviour as old [alt+f3]
+  { "keys": ["alt+f3", "alt+f3"],     "command": "find_all_under"},
+
+  { "keys": ["ctrl+alt+f"],           "command": "multi_find_all" },
   { "keys": ["alt+f3", "c"],          "command": "multi_find_all", "args": {"case": true}},
   { "keys": ["alt+f3", "ctrl+c"],     "command": "multi_find_all", "args": {"case": false}},
   { "keys": ["alt+f3", "w"],          "command": "multi_find_all", "args": {"case": true, "word": true}},
