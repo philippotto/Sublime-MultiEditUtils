@@ -103,7 +103,7 @@ class MultiFindMenuCommand(sublime_plugin.TextCommand):
       "Find All     Case +    Word -",
       "Find All     Case -    Word +",
       "Find All     Case -    Word -",
-      "Find All     Case +    Word +  Ignore Comments)",
+      "Find All     Case +    Word +  (Ignore Comments)",
       "Find Regex   (Additive)",
       "Find Regex   (Subtractive)"
     ]
