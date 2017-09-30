@@ -8,6 +8,6 @@
   { "command": "split_selection", "caption" : "MultiEditUtils: Split selection" },
   { "command": "strip_selection", "caption" : "MultiEditUtils: Strip Selection" },
   { "command": "remove_empty_regions", "caption" : "MultiEditUtils: Remove Empty Regions" },
-  { "command": "multi_find_all", "caption" : "MultiEditUtils: Multi FindAll" },
+  { "command": "multi_find_menu", "caption" : "MultiEditUtils: Multi FindAll" },
   { "command": "preserve_case", "caption" : "MultiEditUtils: Preserve Case" }
 ]
