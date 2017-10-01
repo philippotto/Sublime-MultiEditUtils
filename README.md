@@ -67,7 +67,28 @@ When splitting your selection or performing other actions on your selection, it 
 
 ### Quick Find All for multiple selections
 
-Similar to the built-in "Quick Find All" functionality, MultiEditUtils provides a functionality which selects all occurrences of all active selections. The default keybinding of the ```multi_find_all``` command is **ctrl+alt+f** (on Mac it's **cmd+alt+j**).
+Similar to the built-in "Quick Find All" functionality, MultiEditUtils provides a functionality which selects all occurrences of all active selections. By default, it will select the word the cursor is on, if the selection is empty, just like `find_all_under` command. If you don't like this behaviour, add the argument `"expand": false`
+
+These are just suggested keybindings, but you'll have to activate them in your keymap file first. Here shown for Windows/Linux:
+
+```
+ctrl+alt+f, ctrl+alt+f   case: true       word: true
+
+ctrl+alt+f, c            case: true
+ctrl+alt+f, ctrl+c       case: false
+ctrl+alt+f, w            case: true       word: true
+ctrl+alt+f, ctrl+w       case: false      word: true
+ctrl+alt+f, q            case: true       word: true      ignore_comments: true
+```
+
+Additionally, you can perform a regex search that finds all occurrences of the entered regex. It can be **additive** (applied on top of your current selection) or **subtractive** (removes the results of the search instead). Example keybindings:
+
+```
+ctrl+alt+f, r                   
+ctrl+alt+f, ctrl+alt+r          subtract: true                 
+ctrl+alt+f, ctrl+r              case    : false                    
+ctrl+alt+f, ctrl+alt+shift+r    subtract: true      case: false
+```
 
 ![](http://philippotto.github.io/Sublime-MultiEditUtils/screens/08%20multi%20find%20all.gif)
 

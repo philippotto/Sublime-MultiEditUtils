@@ -10,7 +10,25 @@
       {"key": "setting.is_widget", "operator": "equal", "operand": false}
     ]
   },
-  { "keys": ["ctrl+alt+f"], "command": "multi_find_all" },
+
+  // Multi Find All example keybindings, uncomment to activate
+
+  // // main keybinding, set the search type you're most comfortable with, default is Case+Word
+  // { "keys": ["ctrl+alt+f", "ctrl+alt+f"],       "command": "multi_find_all", "args": {"case": true, "word": true}},
+
+  // { "keys": ["ctrl+alt+f", "ctrl+c"],           "command": "multi_find_all", "args": {"case": false}},
+  // { "keys": ["ctrl+alt+f", "c"],                "command": "multi_find_all", "args": {"case": true}},
+  // { "keys": ["ctrl+alt+f", "ctrl+w"],           "command": "multi_find_all", "args": {"case": false, "word": true}},
+  // { "keys": ["ctrl+alt+f", "w"],                "command": "multi_find_all", "args": {"case": true, "word": true}},
+  // { "keys": ["ctrl+alt+f", "q"],                "command": "multi_find_all", "args": {"case": true, "word": true, "ignore_comments": true}},
+
+  // // find all with regex search, additive(on top of current selection) or subtractive
+  // { "keys": ["ctrl+alt+f", "r"],                "command": "multi_find_all_regex"},
+  // { "keys": ["ctrl+alt+f", "ctrl+alt+r"],       "command": "multi_find_all_regex", "args": {"subtract": true}},
+  // { "keys": ["ctrl+alt+f", "ctrl+r"],           "command": "multi_find_all_regex", "args": {"case": false}},
+  // { "keys": ["ctrl+alt+f", "ctrl+alt+shift+r"], "command": "multi_find_all_regex", "args": {"subtract": true, "case": false}},
+
+
   { "keys": ["ctrl+alt+d"], "command": "selection_fields", "args": {"mode": "smart"} },
   { "keys": ["escape"], "command": "selection_fields",
     "args": {"mode": "pop"},

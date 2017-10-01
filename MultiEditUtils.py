@@ -4,19 +4,130 @@ from collections import namedtuple
 
 class MultiFindAllCommand(sublime_plugin.TextCommand):
 
-  def run(self, edit):
+  def run(self, edit, case=True, word=False, ignore_comments=False, expand=True):
 
     view = self.view
     newRegions = []
 
+    # filter selections in order to exclude duplicates since it can hang
+    # Sublime if search is performed on dozens of selections, this doesn't
+    # happen with built-in command because it works on a single selection
+    initial = [sel for sel in view.sel()]
+    regions, substrings = [], []
+    for region in view.sel():
+      if expand and region.empty():
+        # if expanding substring will be the word
+        region = view.word(region.a)
+        # add the region since nothing is selected yet
+        view.sel().add(region)
+      # filter by substring (word or not)
+      substr = view.substr(region)
+      if substr and substr not in substrings:
+        regions.append(region)
+        substrings.append(substr)
+    view.sel().clear()
+    if regions:
+      for region in regions:
+        view.sel().add(region)
+    else:
+      view.window().status_message("Multi Find All: nothing selected")
+      for sel in initial:
+        view.sel().add(sel)
+      return
+
+    selected_words = [view.substr(view.word(sel)).lower() for sel in view.sel()]
+
     for region in view.sel():
       substr = view.substr(region)
-      for region in view.find_all(substr, sublime.LITERAL):
-        newRegions.append(region)
+
+      if case:
+          for region in view.find_all(substr, sublime.LITERAL):
+            newRegions.append(region)
+      else:
+          for region in view.find_all(substr, sublime.LITERAL | sublime.IGNORECASE):
+            newRegions.append(region)
+
+      if word:
+        deleted = [region for region in newRegions
+                   if view.substr(view.word(region)).lower() not in selected_words]
+        newRegions = [region for region in newRegions if region not in deleted]
+
+      if ignore_comments:
+        deleted = [region for region in newRegions
+                   if re.search(r'\bcomment\b', view.scope_name(region.a))]
+        newRegions = [region for region in newRegions if region not in deleted]
 
     for region in newRegions:
       view.sel().add(region)
 
+class MultiFindAllRegexCommand(sublime_plugin.TextCommand):
+
+  def on_done(self, regex):
+
+    case = sublime.IGNORECASE if not self.case else 0
+    regions = self.view.find_all(regex, case)
+
+    # we don't clear the selection so it's additive, it's nice to just add a
+    # regex search on top of a previous search
+    if not self.subtract:
+      for region in regions:
+        self.view.sel().add(region)
+
+    # the resulting regions will be subtracted instead
+    else:
+      for region in regions:
+        self.view.sel().subtract(region)
+
+    # remove empty selections in both cases, so there aren't loose cursors
+    regions = [r for r in self.view.sel() if not r.empty()]
+    self.view.sel().clear()
+    for region in regions:
+      self.view.sel().add(region)
+    for region in self.view.sel():
+      print(region)
+
+  def run(self, edit, case=True, subtract=False):
+
+    self.edit = edit
+    self.case = case
+    self.subtract = subtract
+    c = "Additive regex search:" if not subtract else "Subtractive regex search:"
+    sublime.active_window().show_input_panel(c, "", self.on_done, None, None)
+
+class MultiFindMenuCommand(sublime_plugin.TextCommand):
+
+  def run(self, edit):
+
+    choice = [
+      "Find All     Case +    Word +",
+      "Find All     Case +    Word -",
+      "Find All     Case -    Word +",
+      "Find All     Case -    Word -",
+      "Find All     Case +    Word +  (Ignore Comments)",
+      "Find Regex   (Additive)",
+      "Find Regex   (Subtractive)"
+    ]
+
+    def on_done(index):
+
+      if index == -1:
+        return
+      if index == 0:
+        self.view.run_command('multi_find_all', {"case": True, "word": True})
+      elif index == 1:
+        self.view.run_command('multi_find_all', {"case": True})
+      elif index == 2:
+        self.view.run_command('multi_find_all', {"case": False, "word": True})
+      elif index == 3:
+        self.view.run_command('multi_find_all', {"case": False})
+      elif index == 4:
+        self.view.run_command('multi_find_all', {"case": True, "word": True, "ignore_comments": True})
+      elif index == 5:
+        self.view.run_command('multi_find_all_regex')
+      elif index == 6:
+        self.view.run_command('multi_find_all_regex', {"subtract": True})
+
+    self.view.window().show_quick_panel(choice, on_done, 1, 0, None)
 
 class JumpToLastRegionCommand(sublime_plugin.TextCommand):
 
