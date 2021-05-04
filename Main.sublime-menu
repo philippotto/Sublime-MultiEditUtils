@@ -1,22 +1,61 @@
 [
   {
     "id": "selection",
-    "children":
-    [
+    "children": [
       {
         "caption": "MultiEditUtils",
-        "children":[
-          { "command": "jump_to_last_region" },
-          { "command": "add_last_selection" },
-          { "command": "cycle_through_regions" },
-          { "command": "normalize_region_ends" },
-          { "command": "split_selection" },
-          { "command": "strip_selection"},
-          { "command": "remove_empty_regions"},
-          { "command": "multi_find_all"},
-          { "command": "selection_fields", "caption": "Selection as Fields", "args": {"mode": "toggle"} },
-          { "command": "preserve_case"}
+        "children": [
+          {
+            "command": "jump_to_last_region"
+          },
+          {
+            "command": "add_last_selection"
+          },
+          {
+            "command": "cycle_through_regions"
+          },
+          {
+            "command": "normalize_region_ends"
+          },
+          {
+            "command": "split_selection"
+          },
+          {
+            "command": "strip_selection"
+          },
+          {
+            "command": "remove_empty_regions"
+          },
+          {
+            "command": "multi_find_all"
+          },
+          {
+            "command": "selection_fields",
+            "caption": "Selection as Fields",
+            "args": {
+              "mode": "toggle"
+            }
+          },
+          {
+            "command": "preserve_case"
+          },
+          {
+            "caption": "Expand Selection to …",
+            "command": "jump_to_interactive",
+            "args": {
+              "extend": true
+            }
+          }
         ]
+      }
+    ]
+  },
+  {
+    "id": "goto",
+    "children": [
+      {
+        "caption": "Jump to …",
+        "command": "jump_to_interactive"
       }
     ]
   },
@@ -24,67 +63,15 @@
     "caption": "Preferences",
     "mnemonic": "n",
     "id": "preferences",
-    "children":
-    [
+    "children": [
       {
         "caption": "Package Settings",
         "mnemonic": "P",
         "id": "package-settings",
-        "children":
-        [
+        "children": [
           {
             "caption": "MultiEditUtils",
-            "children":
-            [
-              {
-                "command": "open_file",
-                "id": "bindings",
-                "args": {
-                  "file": "${packages}/MultiEditUtils/Default (Windows).sublime-keymap",
-                  "platform": "Windows"
-                },
-                "caption": "Key Bindings – Default"
-              },
-              {
-                "command": "open_file",
-                "args": {
-                  "file": "${packages}/MultiEditUtils/Default (OSX).sublime-keymap",
-                  "platform": "OSX"
-                },
-                "caption": "Key Bindings – Default"
-              },
-              {
-                "command": "open_file",
-                "args": {
-                  "file": "${packages}/MultiEditUtils/Default (Linux).sublime-keymap",
-                  "platform": "Linux"
-                },
-                "caption": "Key Bindings – Default"
-              },
-              {
-                "command": "open_file",
-                "args": {
-                  "file": "${packages}/User/Default (Windows).sublime-keymap",
-                  "platform": "Windows"
-                },
-                "caption": "Key Bindings – User"
-              },
-              {
-                "command": "open_file",
-                "args": {
-                  "file": "${packages}/User/Default (OSX).sublime-keymap",
-                  "platform": "OSX"
-                },
-                "caption": "Key Bindings – User"
-              },
-              {
-                "command": "open_file",
-                "args": {
-                  "file": "${packages}/User/Default (Linux).sublime-keymap",
-                  "platform": "Linux"
-                },
-                "caption": "Key Bindings – User"
-              },
+            "children": [
               {
                 "command": "open_file",
                 "args": {
@@ -98,11 +85,19 @@
                   "file": "${packages}/User/MultiEditUtils.sublime-settings"
                 },
                 "caption": "Settings - User"
-              }
+              },
+              {
+                "command": "edit_settings",
+                "args": {
+                  "base_file": "${packages}/MultiEditUtils/Default (${platform}).sublime-keymap",
+                  "user_file": "${packages}/User/Default (${platform}).sublime-keymap",
+                },
+                "caption": "Key Bindings"
+              },
             ]
-          }
+          },
         ]
       }
     ]
-  }
+  },
 ]

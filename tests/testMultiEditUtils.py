@@ -1,4 +1,5 @@
-# coding: utf8
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import sublime
 from unittest import TestCase
@@ -6,271 +7,267 @@ import re
 
 version = sublime.version()
 
+
 class TestMultiEditUtils(TestCase):
 
-  def setUp(self):
+    def setUp(self):
 
-    self.view = sublime.active_window().new_file()
+        self.view = sublime.active_window().new_file()
 
+    def tearDown(self):
 
-  def tearDown(self):
+        if self.view:
+            self.view.set_scratch(True)
+            self.view.window().run_command('close_file')
 
-    if self.view:
-      self.view.set_scratch(True)
-      self.view.window().run_command("close_file")
+    def splitBy(self, separator, expectedAmount):
 
+        testString = 'this, is, a, test'
+        self.view.run_command('insert', {'characters': testString})
+        self.view.run_command('select_all')
+        self.view.run_command('split_selection',
+                              {'separator': separator})
 
-  def splitBy(self, separator, expectedAmount):
+        selection = self.view.sel()
+        selection_length = len([region for region in selection])
+        self.assertEqual(len(selection), expectedAmount)
 
-    testString = "this, is, a, test"
-    self.view.run_command("insert", {"characters": testString})
-    self.view.run_command("select_all")
-    self.view.run_command("split_selection", dict(separator = separator))
+    def testSplitBySpace(self):
 
-    selection = self.view.sel()
+        self.splitBy(' ', 4)
 
-    self.assertEqual(len(selection), expectedAmount)
+    def testSplitByCommaSpace(self):
 
+        self.splitBy(', ', 4)
 
-  def testSplitBySpace(self):
+    def testSplitByCharacter(self):
 
-    self.splitBy(" ", 4)
+        self.splitBy('', 17)
 
+    def testToggleRegionEnds(self):
 
-  def testSplitByCommaSpace(self):
+        testString = 'this is a test'
+        self.view.run_command('insert', {'characters': testString})
 
-    self.splitBy(", ", 4)
+        regionTuple = [0, 14]
+        self.selectRegions([regionTuple])
 
+        selection = self.view.sel()
+        self.assertRegionEqual(selection[0], regionTuple)
 
-  def testSplitByCharacter(self):
+        self.view.run_command('normalize_region_ends')
 
-    self.splitBy("", 17)
+        self.assertRegionEqual(selection[0], regionTuple[::-1])
 
+    def testToggleRegionsEnds(self):
 
-  def testToggleRegionEnds(self):
+        testString = 'test test'
+        self.view.run_command('insert', {'characters': testString})
 
-    testString = "this is a test"
-    self.view.run_command("insert", {"characters": testString})
+        regionTuples = [[0, 4], [9, 5]]
+        self.selectRegions(regionTuples)
 
-    regionTuple = [0, 14]
-    self.selectRegions([regionTuple])
+        selection = self.view.sel()
+        self.assertRegionEqual(selection[0], regionTuples[0])
+        self.assertRegionEqual(selection[1], regionTuples[1])
 
-    selection = self.view.sel()
-    self.assertRegionEqual(selection[0], regionTuple)
+        self.view.run_command('normalize_region_ends')
 
-    self.view.run_command("normalize_region_ends")
+        self.assertRegionEqual(selection[0], regionTuples[0])
+        self.assertRegionEqual(selection[1], regionTuples[1][::-1])
 
-    self.assertRegionEqual(selection[0], regionTuple[::-1])
+    def testJumpToLastRegion(self):
 
+        testString = 'test test test test'
+        self.view.run_command('insert', {'characters': testString})
 
-  def testToggleRegionEnds(self):
+        self.selectRegions([[0, 4], [5, 9]])
 
-    testString = "test test"
-    self.view.run_command("insert", {"characters": testString})
+        selection = self.view.sel()
+        self.assertEqual(len(selection), 2)
 
-    regionTuples = [[0, 4], [9, 5]]
-    self.selectRegions(regionTuples)
+        self.view.run_command('jump_to_last_region')
 
-    selection = self.view.sel()
-    self.assertRegionEqual(selection[0], regionTuples[0])
-    self.assertRegionEqual(selection[1], regionTuples[1])
+        self.assertEqual(len(selection), 1)
+        self.assertRegionEqual(selection[0], [9, 9])
 
-    self.view.run_command("normalize_region_ends")
+    def testAddLastSelection(self):
 
-    self.assertRegionEqual(selection[0], regionTuples[0])
-    self.assertRegionEqual(selection[1], regionTuples[1][::-1])
+        testString = 'this is a test'
+        self.view.run_command('insert', {'characters': testString})
 
+        regions = [[0, 4], [5, 9]]
+        self.selectRegions([regions[0]])
+        self.view.run_command('trigger_selection_modified')
+        self.selectRegions([regions[1]])
+        self.view.run_command('trigger_selection_modified')
 
-  def testJumpToLastRegion(self):
+        self.view.run_command('add_last_selection')
 
-    testString = "test test test test"
-    self.view.run_command("insert", {"characters": testString})
+        selection = self.view.sel()
 
-    self.selectRegions([[0, 4], [5, 9]])
+        self.assertEqual(len(selection), 2)
+        self.assertRegionEqual(selection[0], regions[0])
+        self.assertRegionEqual(selection[1], regions[1])
 
-    selection = self.view.sel()
-    self.assertEqual(len(selection), 2)
+    def testRemoveEmptyRegions(self):
 
-    self.view.run_command("jump_to_last_region")
+        testString = '''a
+b
 
-    self.assertEqual(len(selection), 1)
-    self.assertRegionEqual(selection[0], [9, 9])
+c'''
+        regions = [[0, 1], [2, 3], [5, 6]]
 
+        self.view.run_command('insert', {'characters': testString})
+        self.view.run_command('select_all')
+        self.view.run_command('split_selection_into_lines')
+        self.view.run_command('remove_empty_regions')
 
-  def testAddLastSelection(self):
+        selection = self.view.sel()
 
-    testString = "this is a test"
-    self.view.run_command("insert", {"characters": testString})
+        self.assertEqual(len(selection), 3)
 
-    regions = [[0, 4], [5, 9]]
-    self.selectRegions([regions[0]])
-    self.view.run_command("trigger_selection_modified")
-    self.selectRegions([regions[1]])
-    self.view.run_command("trigger_selection_modified")
+        for (actual, expected) in zip(selection, regions):
+            self.assertRegionEqual(actual, expected)
 
-    self.view.run_command("add_last_selection")
+    def testStripSelection(self):
 
-    selection = self.view.sel()
+        testString = '  too much whitespace here  '
 
+        self.view.run_command('insert', {'characters': testString})
+        self.view.run_command('select_all')
+        self.view.run_command('strip_selection')
 
-    self.assertEqual(len(selection), 2)
-    self.assertRegionEqual(selection[0], regions[0])
-    self.assertRegionEqual(selection[1], regions[1])
+        selection = self.view.sel()
 
+        self.assertEqual(len(selection), 1)
+        self.assertRegionEqual(selection[0], [2, 26])
 
-  def testRemoveEmptyRegions(self):
+    def testStripSelectionWithPureWhitespace(self):
 
-    testString = "a\nb\n\nc"
-    regions = [[0, 1], [2, 3], [5, 6]]
+        testString = '    '
 
-    self.view.run_command("insert", {"characters": testString})
-    self.view.run_command("select_all")
-    self.view.run_command("split_selection_into_lines")
-    self.view.run_command("remove_empty_regions")
-
-    selection = self.view.sel()
-
-    self.assertEqual(len(selection), 3)
-
-    for actual, expected in zip(selection, regions):
-      self.assertRegionEqual(actual, expected)
-
-
-  def testStripSelection(self):
-
-    testString = "  too much whitespace here  "
-
-    self.view.run_command("insert", {"characters": testString})
-    self.view.run_command("select_all")
-    self.view.run_command("strip_selection")
-
-    selection = self.view.sel()
-
-    self.assertEqual(len(selection), 1)
-    self.assertRegionEqual(selection[0], [2, 26])
-
-
-  def testStripSelectionWithPureWhitespace(self):
-
-    testString = "    "
-
-    self.view.run_command("insert", {"characters": testString})
-    selection = self.view.sel()
+        self.view.run_command('insert', {'characters': testString})
+        selection = self.view.sel()
 
     # cursor should stay at the end of the line
-    self.view.run_command("select_all")
-    self.view.run_command("strip_selection")
 
-    self.assertEqual(len(selection), 1)
-    self.assertRegionEqual(selection[0], [4, 4])
+        self.view.run_command('select_all')
+        self.view.run_command('strip_selection')
+
+        self.assertEqual(len(selection), 1)
+        self.assertRegionEqual(selection[0], [4, 4])
 
     # cursor should be at the beginning of the line
-    self.view.run_command("select_all")
-    self.view.run_command("normalize_region_ends")
-    self.view.run_command("strip_selection")
 
-    self.assertEqual(len(selection), 1)
-    self.assertRegionEqual(selection[0], [0, 0])
+        self.view.run_command('select_all')
+        self.view.run_command('normalize_region_ends')
+        self.view.run_command('strip_selection')
 
+        self.assertEqual(len(selection), 1)
+        self.assertRegionEqual(selection[0], [0, 0])
 
-  def testMultiFindAll(self):
+    def testMultiFindAll(self):
 
-    testString = "abc def - abc - def - def"
+        testString = 'abc def - abc - def - def'
 
-    self.view.run_command("insert", {"characters": testString})
-    selection = self.view.sel()
+        self.view.run_command('insert', {'characters': testString})
+        selection = self.view.sel()
 
     # select the first occurrences of abc and def
-    selection.clear()
-    selection.add(sublime.Region(0, 3))
-    selection.add(sublime.Region(4, 7))
 
-    self.view.run_command("multi_find_all")
+        selection.clear()
+        selection.add(sublime.Region(0, 3))
+        selection.add(sublime.Region(4, 7))
 
-    self.assertEqual(len(selection), 5)
-    expectedRegions = [[0, 3], [4, 7], [10, 13], [16, 19], [22, 25]]
+        self.view.run_command('multi_find_all')
 
-    self.assertRegionsEqual(selection, expectedRegions)
+        self.assertEqual(len(selection), 5)
+        expectedRegions = [[0, 3], [4, 7], [10, 13], [16, 19], [22, 25]]
 
+        self.assertRegionsEqual(selection, expectedRegions)
 
-  def testDecode(self):
+    def testDecode(self):
 
+        sel = self.decode_sel('>test< some->Test< >TEST<')
 
-    sel = self.decode_sel(">test< some->Test< >TEST<")
+        print(sel)
 
-    print(sel)
+    def decode_sel(self, content):
 
+        splitted = re.split(r'([│><])', content)
+        content = ''
+        pos = 0
+        regionStart = 0
+        regions = []
+        for s in splitted:
+            if s == '│':
+                regions.append(pos)
+            elif s == '<':
+                regions.append(sublime.Region(regionStart, pos))
+            elif s == '>':
+                regionStart = pos
+            else:
+                pos += len(s)
+                content += s
 
+        return (content, regions)
 
-  def decode_sel(self, content):
+    def testBasicPreserveCase(self):
 
-    splitted = re.split(r'([│><])', content)
-    content = ''
-    pos = 0
-    regionStart = 0
-    regions = []
-    for s in splitted:
-      if s == '│':
-        regions.append(pos)
-      elif s == '<':
-        regions.append(sublime.Region(regionStart, pos))
-      elif s == '>':
-        regionStart = pos
-      else:
-        pos += len(s)
-        content += s
+        testString = '>test< some->Test< some_test Some-Test >TEST<'
+        (testString, regions) = self.decode_sel(testString)
+        self.view.run_command('insert', {'characters': testString})
+        selection = self.view.sel()
 
-    return content, regions
+        for region in regions:
+            selection.add(region)
 
+        self.view.run_command('preserve_case', {'newString': 'case'})
 
-  def testBasicPreserveCase(self):
+        self.assertEqual(self.view.substr(regions[0]), 'case')
+        self.assertEqual(self.view.substr(regions[1]), 'Case')
+        self.assertEqual(self.view.substr(regions[2]), 'CASE')
 
-    testString = ">test< some->Test< some_test Some-Test >TEST<"
-    testString, regions = self.decode_sel(testString)
-    self.view.run_command("insert", {"characters": testString})
-    selection = self.view.sel()
+    def testAdvancedPreserveCase(self):
 
-    for region in regions:
-      selection.add(region)
+        expectedStrings = [
+            'some case',
+            'some-Case',
+            'some_case',
+            'Some-Case',
+            'SomeCase',
+            'someCase',
+            'SomeCASE',
+            ]
+        testString = \
+            '>some test< >some-Test< >some_test< >Some-Test< >SomeTest< >someTest< >SomeTEST<'
+        (testString, regions) = self.decode_sel(testString)
+        self.view.run_command('insert', {'characters': testString})
+        selection = self.view.sel()
 
-    self.view.run_command("preserve_case", {"newString": "case"})
+        for region in regions:
+            selection.add(region)
 
-    self.assertEqual(self.view.substr(regions[0]), "case")
-    self.assertEqual(self.view.substr(regions[1]), "Case")
-    self.assertEqual(self.view.substr(regions[2]), "CASE")
+        self.view.run_command('preserve_case', {'newString': 'some case'
+                              })
 
+        for (region, expectedString) in zip(regions, expectedStrings):
+            self.assertEqual(self.view.substr(region), expectedString)
 
-  def testAdvancedPreserveCase(self):
+    def assertRegionEqual(self, a, b):
 
-    expectedStrings = ["some case", "some-Case", "some_case", "Some-Case", "SomeCase", "someCase", "SomeCASE"]
-    testString = ">some test< >some-Test< >some_test< >Some-Test< >SomeTest< >someTest< >SomeTEST<"
-    testString, regions = self.decode_sel(testString)
-    self.view.run_command("insert", {"characters": testString})
-    selection = self.view.sel()
+        self.assertEqual(a.a, b[0])
+        self.assertEqual(a.b, b[1])
 
-    for region in regions:
-      selection.add(region)
+    def assertRegionsEqual(self, selection, expectedRegions):
 
-    self.view.run_command("preserve_case", {"newString": "some case"})
+        for (index, region) in enumerate(expectedRegions):
+            self.assertRegionEqual(selection[index], region)
 
-    for region, expectedString in zip(regions, expectedStrings):
-      self.assertEqual(self.view.substr(region), expectedString)
+    def selectRegions(self, regions):
 
-
-  def assertRegionEqual(self, a, b):
-
-    self.assertEqual(a.a, b[0])
-    self.assertEqual(a.b, b[1])
-
-
-  def assertRegionsEqual(self, selection, expectedRegions):
-
-    for index, region in enumerate(expectedRegions):
-      self.assertRegionEqual(selection[index], region)
-
-
-  def selectRegions(self, regions):
-
-    self.view.sel().clear()
-    for regionTuple in regions:
-      self.view.sel().add(sublime.Region(regionTuple[0], regionTuple[1]))
+        self.view.sel().clear()
+        for regionTuple in regions:
+            self.view.sel().add(sublime.Region(regionTuple[0],
+                                regionTuple[1]))

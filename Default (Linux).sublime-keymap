@@ -23,11 +23,15 @@
   // { "keys": ["ctrl+alt+f", "q"],                "command": "multi_find_all", "args": {"case": true, "word": true, "ignore_comments": true}},
 
   // // find all with regex search, additive(on top of current selection) or subtractive
-  // { "keys": ["ctrl+alt+f", "r"],                "command": "multi_find_all_regex"},
-  // { "keys": ["ctrl+alt+f", "ctrl+alt+r"],       "command": "multi_find_all_regex", "args": {"subtract": true}},
-  // { "keys": ["ctrl+alt+f", "ctrl+r"],           "command": "multi_find_all_regex", "args": {"case": false}},
-  // { "keys": ["ctrl+alt+f", "ctrl+alt+shift+r"], "command": "multi_find_all_regex", "args": {"subtract": true, "case": false}},
+  // { "keys": ["ctrl+alt+f", "r"],                "command": "multi_find_regex"},
+  // { "keys": ["ctrl+alt+f", "ctrl+alt+r"],       "command": "multi_find_regex", "args": {"subtractive": true}},
+  // { "keys": ["ctrl+alt+f", "ctrl+r"],           "command": "multi_find_regex", "args": {"case": false}},
+  // { "keys": ["ctrl+alt+f", "ctrl+alt+shift+r"], "command": "multi_find_regex", "args": {"subtractive": true, "case": false}},
 
+  // { "keys": ["ctrl+e"], "command": "jump_to_interactive" },
+  // { "keys": ["ctrl+shift+e"], "command": "jump_to_interactive", "args": { "extend": true, "whole_match": true } },
+  // { "keys": ["alt+e"], "command": "jump_to_interactive", "args": { "create_new": true } },
+  // { "keys": ["ctrl+alt+e"], "command": "jump_to_interactive", "args": { "create_new": true, "whole_match": true } }
 
   { "keys": ["ctrl+alt+d"], "command": "selection_fields", "args": {"mode": "smart"} },
   { "keys": ["escape"], "command": "selection_fields",

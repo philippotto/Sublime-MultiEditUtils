@@ -1,13 +1,7 @@
 import sublime
 import sublime_plugin
 
-_ST3 = sublime.version() >= "3000"
-
-# highlight pushed region options
-if _ST3:
-    _FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_NO_FILL
-else:
-    _FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
+_FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_NO_FILL
 
 
 def get_settings(key, default=None):
@@ -34,10 +28,7 @@ def _set_fields(view, regions, added_fields=False):
         reg_name = "meu_sf_added_selections"
         scope_setting = "scope.added_fields"
     scope = _get_settings(scope_setting, "comment")
-    if _ST3:
-        view.add_regions(reg_name, regions, scope=scope, flags=_FLAGS)
-    else:
-        view.add_regions(reg_name, regions, scope, _FLAGS)
+    view.add_regions(reg_name, regions, scope=scope, flags=_FLAGS)
 
 
 def _get_fields(view, added_fields=True):
@@ -135,6 +126,7 @@ def _subtract_selection(pushed_regions, sel_regions):
             # yield the region as field
             yield reg
 
+
 _valid_modes = [
     "push",  # push the current selection as fields, overwrite existing fields
     "pop",  # pop the pushed field and add them to the selection
@@ -152,7 +144,7 @@ class SelectionFieldsCommand(sublime_plugin.TextCommand):
     def run(self, edit, mode="smart", jump_forward=True, only_other=False):
         if mode not in _valid_modes:
             sublime.error_message(
-                "'{0}' is an invalid mode for 'selection_fields'.\n"
+                "'{0}' is an invalid mode for 'selection_fields'.\n" +
                 "Valid modes are: [{1}]"
                 .format(mode, ", ".join(_valid_modes))
             )
@@ -213,11 +205,7 @@ class SelectionFieldsCommand(sublime_plugin.TextCommand):
         # change to the result selections, if they exists
         if sel_regions:
             view.sel().clear()
-            if _ST3:
-                view.sel().add_all(sel_regions)
-            else:
-                for sel in sel_regions:
-                    view.sel().add(sel)
+            view.sel().add_all(sel_regions)
             view.show(sel_regions[0])
 
 

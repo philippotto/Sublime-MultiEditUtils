@@ -1,5 +1,25 @@
 {
-  "live_split_selection" : true,
+  // When enabled, regions will be drawn to preview where splitting
+  // the text will occur.
+  "live_split_selection.enabled": true,
+  // Option to determine the scope which the regions will be
+  // drawn in. Common and valid options are:
+  // - region.background
+  // - region.foreground
+  // - region.accent
+  // - region.redish
+  // - region.orangish
+  // - region.yellowish
+  // - region.greenish
+  // - region.cyanish
+  // - region.bluish
+  // - region.purplish
+  // - region.pinkish
+  "live_split_selection.scope": "region.cyanish",
+  //  See above options
+  "find.regex.additive.scope": "region.greenish",
+  //  See above options
+  "find.regex.substractive.scope": "region.redish",
   // the highlighting scope of fields
   "selection_fields.scope.fields": "comment",
   // the highlighting scope of fields added via the `add` mode
