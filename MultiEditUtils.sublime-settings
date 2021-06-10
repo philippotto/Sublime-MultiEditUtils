@@ -19,7 +19,7 @@
   //  See above options
   "find.regex.additive.scope": "region.greenish",
   //  See above options
-  "find.regex.substractive.scope": "region.redish",
+  "find.regex.subtractive.scope": "region.redish",
   // the highlighting scope of fields
   "selection_fields.scope.fields": "comment",
   // the highlighting scope of fields added via the `add` mode

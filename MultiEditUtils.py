@@ -120,14 +120,13 @@ class MultiFindRegexCommand(sublime_plugin.TextCommand):
         case = sublime.IGNORECASE if not case else 0
         regions = self.view.find_all(expression, case)
 
-        if not subtractive:
-            for region in regions:
-                self.view.sel().add(region)
-        elif subtractive:
+        if subtractive:
             for region in regions:
                 self.view.sel().subtract(region)
+        elif not subtractive:
+            for region in regions:
+                self.view.sel().add(region)
         else:
-            # Unknown operation: Shouldn't happen
             return
 
         [self.view.sel().subtract(r) for r in self.view.sel() if r.empty()]
@@ -168,6 +167,10 @@ class ExpressionInputHandler(sublime_plugin.TextInputHandler):
         return arg
 
     def preview(self, value):
+        if value == '':
+            self.view.erase_regions('meu_expression_preview')
+            return
+
         operation = "Subtractive" if self.args.get(
             "subtractive", False) else "Additive"
 
@@ -176,16 +179,23 @@ class ExpressionInputHandler(sublime_plugin.TextInputHandler):
                 "find.regex.additive.scope", 'region.greenish')
         else:
             preview_scope = get_settings(
-                "find.regex.substractive.scope", 'region.greenish')
-
-        self.view.erase_regions(
-            'meu_expression_preview')
+                "find.regex.subtractive.scope", 'region.redish')
 
         regions = self.view.find_all(value, 0)
-        self.view.add_regions('meu_expression_preview', [s for s in regions], preview_scope, '',
-                              sublime.DRAW_NO_FILL | sublime.PERSISTENT)
+
+        if operation == 'Additive':
+            regions = [r for r in regions if not self.view.sel().contains(r)]
+        else:
+            regions = [r for r in regions if self.view.sel().contains(r)]
+
+        self.view.add_regions(
+            'meu_expression_preview', [s for s in regions], preview_scope, '',
+            sublime.DRAW_NO_FILL | sublime.PERSISTENT)
+
         return sublime.Html(
-            f'<strong>{operation} Expression:</strong> <em>{html.escape(value)}</em>'
+            f'<strong>{operation} Expression:</strong>' +
+            f' <em>{html.escape(value)}</em><br/>' +
+            f'<strong>Selections:</strong> <em>{len(regions)}</em>'
         )
 
     def cancel(self):
@@ -251,7 +261,8 @@ class CycleThroughRegionsCommand(sublime_plugin.TextCommand):
                 break
 
         # If the last region in the buffer was reached, take the first region.
-        # Empty regions will be evaluated falsy, which is why short-circuit evaluation doesn't work here.
+        # Empty regions will be evaluated falsy, which is why short-circuit
+        # evaluation doesn't work here.
         if next_region is None:
             next_region = selectedRegions[0]
 
@@ -559,8 +570,8 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
         oldSeparator = analyzedOldString.separator
 
         for index, currentElement in enumerate(newStringGroups):
-            # If the user provides more new strings than old ones are given, we just
-            # repeat the last case.
+            # If the user provides more new strings than old ones are given, we
+            # just repeat the last case.
             clampedIndex = min(index, len(oldCases) - 1)
             currentCase = oldCases[clampedIndex]
 

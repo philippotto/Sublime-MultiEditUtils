@@ -20,7 +20,7 @@ def _get_settings(key, default=None):
 
 def _set_fields(view, regions, added_fields=False):
     """Set the fields as regions in the view."""
-    # push the fields to the view, kwargs for ST3 and pos args for ST2
+    # push the fields to the view
     if not added_fields:
         reg_name = "meu_sf_stored_selections"
         scope_setting = "scope.fields"
