@@ -60,8 +60,6 @@
     ]
   },
   {
-    "caption": "Preferences",
-    "mnemonic": "n",
     "id": "preferences",
     "children": [
       {
