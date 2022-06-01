@@ -3,6 +3,7 @@ import sublime_plugin
 import re
 import html
 from collections import namedtuple
+from typing import Union, List, Type, Any
 
 from .selection_fields import get_settings
 from .utils import get_new_regions
@@ -25,7 +26,7 @@ MULTI_FIND_MENU = [
 
 class MultiFindMenuCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit, operation):
+    def run(self, edit, operation) -> None:
         if operation == 0:
             self.view.run_command(
                 'multi_find_all', {'case': True, 'word': True})
@@ -41,12 +42,12 @@ class MultiFindMenuCommand(sublime_plugin.TextCommand):
                 'multi_find_all', {'case': True, 'word': True,
                                    'ignore_comments': True})
 
-    def input(self, args):
+    def input(self, _):
         return MultiFindInputHandler()
 
 
 class MultiFindInputHandler(sublime_plugin.ListInputHandler):
-    def name(self):
+    def name(self) -> str:
         return 'operation'
 
     def list_items(self):
@@ -54,7 +55,7 @@ class MultiFindInputHandler(sublime_plugin.ListInputHandler):
 
 
 class MultiFindAllCommand(sublime_plugin.TextCommand):
-    def run(self, edit, case=True, word=False, ignore_comments=False, expand=True):
+    def run(self, edit, case: bool = True, word: bool = False, ignore_comments: bool = False, expand: bool = True) -> None:
         view = self.view
         new_regions = []
 
@@ -116,9 +117,9 @@ class MultiFindAllCommand(sublime_plugin.TextCommand):
 
 
 class MultiFindRegexCommand(sublime_plugin.TextCommand):
-    def run(self, edit, subtractive, expression, case=True):
-        case = sublime.IGNORECASE if not case else 0
-        regions = self.view.find_all(expression, case)
+    def run(self, edit, subtractive: bool, expression: str, case: bool = True) -> None:
+        flag = sublime.IGNORECASE if not case else 0
+        regions = self.view.find_all(expression, flag)
 
         if subtractive:
             for region in regions:
@@ -157,7 +158,7 @@ class OperationInputHandler(sublime_plugin.ListInputHandler):
 
 
 class ExpressionInputHandler(sublime_plugin.TextInputHandler):
-    def __init__(self, view, args):
+    def __init__(self, view, args) -> None:
         self.view = view
         self.args = args
 
@@ -166,7 +167,7 @@ class ExpressionInputHandler(sublime_plugin.TextInputHandler):
             'meu_expression_preview')
         return arg
 
-    def preview(self, value):
+    def preview(self, value) -> Union[sublime.Html, None]:
         if value == '':
             self.view.erase_regions('meu_expression_preview')
             return None
@@ -198,14 +199,14 @@ class ExpressionInputHandler(sublime_plugin.TextInputHandler):
             f'<strong>Selections:</strong> <em>{len(regions)}</em>'
         )
 
-    def cancel(self):
+    def cancel(self) -> None:
         self.view.erase_regions(
             'meu_expression_preview')
 
 
 class JumpToLastRegionCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit, clear_selection=True):
+    def run(self, edit, clear_selection=True) -> None:
         last_region_point = self.view.sel()[-1].b
 
         if clear_selection:
@@ -217,7 +218,7 @@ class JumpToLastRegionCommand(sublime_plugin.TextCommand):
 
 class AddLastSelectionCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit):
+    def run(self, edit) -> None:
         helper = Helper.getOrConstructHelperForView(self.view)
         lastSelections = helper.lastSelections
 
@@ -244,15 +245,14 @@ class AddLastSelectionCommand(sublime_plugin.TextCommand):
 
 class CycleThroughRegionsCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit):
+    def run(self, edit) -> None:
         view = self.view
         visible_region = view.visible_region()
         selectedRegions = view.sel()
+        next_region = None
 
         if not len(selectedRegions):
             return
-
-        next_region = None
 
         # Find the first region which comes after the visible region.
         for region in selectedRegions:
@@ -271,7 +271,7 @@ class CycleThroughRegionsCommand(sublime_plugin.TextCommand):
 
 class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit):
+    def run(self, edit) -> None:
         view = self.view
         selection = view.sel()
 
@@ -292,37 +292,33 @@ class NormalizeRegionEndsCommand(sublime_plugin.TextCommand):
             # if firstVisibleRegion won't work with empty regions
             view.show(firstVisibleRegion.b, False)
 
-    def find_first_visible_region(self):
+    def find_first_visible_region(self) -> Union[sublime.Region, None]:
         visibleRegion = self.view.visible_region()
-
         for region in self.view.sel():
             if region.intersects(visibleRegion):
                 return region
-
         return None
 
-    def normalize_regions(self, regions):
+    def normalize_regions(self, regions) -> List[sublime.Region]:
         return self.invert_regions(regions, lambda region: region.a > region.b)
 
-    def invert_regions(self, regions, condition=lambda region: True):
+    def invert_regions(self, regions, condition=lambda region: True) -> List[sublime.Region]:
         inverted_regions = []
-
         for region in regions:
             invertedRegion = region
             if condition(region):
                 invertedRegion = sublime.Region(region.b, region.a)
 
             inverted_regions.append(invertedRegion)
-
         return inverted_regions
 
-    def are_regions_normalized(self, regions):
+    def are_regions_normalized(self, regions) -> bool:
         return all(region.a < region.b for region in regions)
 
 
 class SplitSelectionCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit, separator=None):
+    def run(self, edit, separator=None) -> None:
         self.live_split_preview = get_settings(
             'live_split_selection.enabled', True)
         self.live_split_preview_scope = get_settings(
@@ -351,10 +347,10 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 
             inputView.run_command('select_all')
 
-    def clear_split_regions(self):
+    def clear_split_regions(self) -> None:
         self.view.erase_regions('meu_split_preview')
 
-    def split_selection(self, preview, separator):
+    def split_selection(self, preview, separator) -> None:
         view = self.view
         new_regions = []
 
@@ -398,7 +394,7 @@ StringMetaData = namedtuple('StringMetaData', 'separator cases stringGroups')
 
 class PreserveCaseCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit, newString=None, selections=None):
+    def run(self, edit, newString=None, selections=None) -> None:
         self.edit = edit
         if selections is not None:
             self.savedSelection = [sublime.Region(
@@ -427,7 +423,7 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
             )
             inputView.run_command('select_all')
 
-    def runPreserveCase(self, newString):
+    def runPreserveCase(self, value: str) -> None:
         selections = [[s.a, s.b] for s in self.savedSelection]
         self.view.run_command(
             'preserve_case', {'newString': value, 'selections': selections})
@@ -447,24 +443,24 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
             view.replace(self.edit, region, newRegionString)
             regionOffset += len(newRegionString) - len(regionString)
 
-    def analyzeString(self, aString):
-        separators = "-_/. "
-        counts = list(map(lambda sep: aString.count(sep), separators))
+    def analyzeString(self, value) -> StringMetaData:
+        separators = '-_/. '
+        counts = list(map(lambda sep: value.count(sep), separators))
         maxCounts = max(counts)
 
         if max(counts) > 0:
             separator = separators[counts.index(maxCounts)]
-            stringGroups = aString.split(separator)
+            stringGroups = value.split(separator)
         else:
             # no real separator
-            separator = ""
-            stringGroups = self.splitByCase(aString)
+            separator = ''
+            stringGroups = self.splitByCase(value)
 
         cases = list(map(self.analyzeCase, stringGroups))
 
         return StringMetaData(separator, cases, stringGroups)
 
-    def splitByCase(self, aString):
+    def splitByCase(self, value) -> List[str]:
         groups = re.split('(?<!^)((?:[^A-Z][^a-z])|(?:[^a-z][^A-Z]))', value)
         newGroups = [groups[0]]
         for index, group in enumerate(groups):
@@ -474,7 +470,7 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
 
         return newGroups
 
-    def analyzeCase(self, aString):
+    def analyzeCase(self, value) -> int:
         lowerReg = re.compile('^[^A-Z]*$')
         upperReg = re.compile('^[^a-z]*$')
         capitalizedReg = re.compile('^[A-Z]([^A-Z])*$')
@@ -488,7 +484,7 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
         else:
             return Case.mixed
 
-    def replaceStringWithCase(self, oldString, newStringGroups):
+    def replaceStringWithCase(self, oldString, newStringGroups) -> str:
         analyzedOldString = self.analyzeString(oldString)
         oldCases = analyzedOldString.cases
         oldSeparator = analyzedOldString.separator
@@ -511,7 +507,7 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
 
 class StripSelection(sublime_plugin.TextCommand):
 
-    def run(self, edit):
+    def run(self, edit) -> None:
         newRegions = []
         selections = self.view.sel()
 
@@ -538,7 +534,7 @@ class StripSelection(sublime_plugin.TextCommand):
 
 class RemoveEmptyRegions(sublime_plugin.TextCommand):
 
-    def run(self, edit, restore_if_all_empty=True):
+    def run(self, edit, restore_if_all_empty=True) -> None:
         old_selection = [selection for selection in self.view.sel()]
         [
             self.view.sel().subtract(selection)
@@ -556,7 +552,7 @@ class RemoveEmptyRegions(sublime_plugin.TextCommand):
 
 class SelectionListener(sublime_plugin.EventListener):
 
-    def on_selection_modified(self, view):
+    def on_selection_modified(self, view) -> None:
         helper = Helper.getOrConstructHelperForView(view)
         lastSelections = helper.lastSelections
 
@@ -577,30 +573,27 @@ class SelectionListener(sublime_plugin.EventListener):
             else:
                 lastSelections.append(currentRegions)
 
-    def isComplexSelection(self, selection):
-        # A "complex selection" is a selection which is not empty or has multiple regions.
+    def isComplexSelection(self, selection) -> bool:
+        # A 'complex selection' is a selection which is not empty or has
+        # multiple regions.
         regionCount = len(selection)
-
         if not regionCount:
             return False
 
         firstRegionLength = len(selection[0])
-
         return regionCount > 1 or firstRegionLength > 0
 
-    def isSubsetOf(self, selectionA, selectionB):
-        # Check if selectionA is a subset of selectionB.
-
-        return all(selectionA.contains(region) for region in selectionB)
+    def isSubsetOf(self, selection_a, selection_b) -> bool:
+        return all(selection_a.contains(region) for region in selection_b)
 
 
 class TriggerSelectionModifiedCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
+    def run(self, edit) -> None:
         SelectionListener().on_selection_modified(self.view)
 
 
 class JumpToCommand(sublime_plugin.TextCommand):
-    def run(self, edit, text, extend=False, create_new=False, whole_match=False):
+    def run(self, edit, text: str, extend: bool = False, create_new: bool = False, whole_match: bool = False) -> None:
         new_regions = get_new_regions(self.view, text, whole_match, extend)
         selection = self.view.sel()
         if not create_new:
@@ -609,11 +602,11 @@ class JumpToCommand(sublime_plugin.TextCommand):
 
 
 class JumpToInteractiveCommand(sublime_plugin.WindowCommand):
-    ADDREGIONS_KEY = "JumpTo"
-    ADDREGIONS_SCOPE = "jumpto"
+    ADDREGIONS_KEY = 'JumpTo'
+    ADDREGIONS_SCOPE = 'jumpto'
     ADDREGIONS_FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
 
-    def run(self, text="", extend=False, create_new=False, whole_match=False):
+    def run(self, text: str = '', extend: bool = False, create_new: bool = False, whole_match: bool = False) -> None:
         self.params = {
             'extend': extend,
             'create_new': create_new,
@@ -629,16 +622,21 @@ class JumpToInteractiveCommand(sublime_plugin.WindowCommand):
             prompt = 'Jump to'
         prompt += ' (chars or [chars] or {count} or /regex/):'
 
-        self.window.show_input_panel(prompt, text, self._on_done, self._on_change, self._on_cancel)
+        self.window.show_input_panel(
+            prompt, text, self._on_done, self._on_change, self._on_cancel)
 
-    def _show_highlight(self, regions):
+    def _show_highlight(self, regions) -> None:
         if not regions:
+            if not self.view:
+                return
             self.view.erase_regions(self.ADDREGIONS_KEY)
         else:
+            if not self.view:
+                return
             self.view.add_regions(self.ADDREGIONS_KEY, regions,
-                                  self.ADDREGIONS_SCOPE, "", self.ADDREGIONS_FLAGS)
+                                  self.ADDREGIONS_SCOPE, '', self.ADDREGIONS_FLAGS)
 
-    def _on_done(self, text):
+    def _on_done(self, value: str) -> None:
         view = self.view
         self._show_highlight(None)
         # Run the command to create a proper undo point
@@ -647,16 +645,16 @@ class JumpToInteractiveCommand(sublime_plugin.WindowCommand):
         if view:
             view.run_command('jump_to', args)
 
-    def _on_change(self, text):
+    def _on_change(self, value: str) -> None:
         view = self.view
 
-        regions = list(get_new_regions(self.view, text, **self.params))
+        regions = list(get_new_regions(self.view, value, **self.params))
         if self.params['create_new']:
             if view:
                 regions += list(view.sel())
         self._show_highlight(tuple(regions))
 
-    def _on_cancel(self):
+    def _on_cancel(self) -> None:
         self._show_highlight(None)
 
 
@@ -664,8 +662,9 @@ class Helper:
 
     viewToHelperMap = {}
 
-    def __init__(self):
-        # The SelectionCommand should be ignored if it was triggered by AddLastSelectionCommand.
+    def __init__(self) -> None:
+        # The SelectionCommand should be ignored if it was triggered by
+        # AddLastSelectionCommand.
         self.ignoreSelectionCommand = False
         self.lastSelections = []
 
@@ -681,5 +680,5 @@ class Helper:
         return helper
 
     @staticmethod
-    def hashSelection(selection):
+    def hashSelection(selection) -> str:
         return str(list(selection))

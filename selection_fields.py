@@ -1,25 +1,26 @@
 import sublime
 import sublime_plugin
+from typing import Any, List, Tuple
 
 _FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_NO_FILL
 
 
-def get_settings(key, default=None):
-    """Get the setting specified by the key."""
+def get_settings(key: str, default=None) -> Any:
+    '''Get the setting specified by the key.'''
     settings = sublime.load_settings('MultiEditUtils.sublime-settings')
     return settings.get(key, default)
 
 
-def _get_settings(key, default=None):
-    """
+def _get_settings(key: str, default: Any = None) -> Any:
+    '''
     Get the setting specified by the key,
     with the prefix `selection_fields.`.
     '''
     return get_settings('selection_fields.{0}'.format(key), default)
 
 
-def _set_fields(view, regions, added_fields=False):
-    """Set the fields as regions in the view."""
+def _set_fields(view: sublime.View, regions: List[sublime.Region], added_fields: bool = False) -> None:
+    '''Set the fields as regions in the view.'''
     # push the fields to the view
     if not added_fields:
         reg_name = 'meu_sf_stored_selections'
@@ -31,25 +32,25 @@ def _set_fields(view, regions, added_fields=False):
     view.add_regions(reg_name, regions, scope=scope, flags=_FLAGS)
 
 
-def _get_fields(view, added_fields=True):
+def _get_fields(view: sublime.View, added_fields=True) -> List[sublime.Region]:
     fields = view.get_regions('meu_sf_stored_selections')
     if added_fields:
         fields.extend(view.get_regions('meu_sf_added_selections'))
     return fields
 
 
-def _erase_added_fields(view):
+def _erase_added_fields(view) -> None:
     view.erase_regions('meu_sf_added_selections')
 
 
-def _erase_fields(view):
+def _erase_fields(view) -> None:
     view.erase_regions('meu_sf_stored_selections')
     view.erase_regions('meu_sf_added_selections')
     view.erase_status('meu_field_message')
 
 
-def _change_selection(view, regions, pos):
-    """Extract the next selection, push all other fields."""
+def _change_selection(view, regions, pos) -> List[sublime.Region]:
+    '''Extract the next selection, push all other fields.'''
     # save and remove the position in the regions
     sel = regions[pos]
     del regions[pos]
@@ -59,16 +60,15 @@ def _change_selection(view, regions, pos):
     if len(regions) >= 1:
         view.set_status('meu_field_message',
                         f'Selection-Field {pos + 1} of {len(regions) + 1}')
-                        .format(pos + 1, len(regions) + 1))
     else:
-        view.erase_status("meu_field_message")
+        view.erase_status('meu_field_message')
     # return the selection, which was at the position
     sel_regions = [sel]
     return sel_regions
 
 
-def _restore_selection(view, only_other):
-    """Restore the selection from the pushed fields."""
+def _restore_selection(view, only_other) -> List[sublime.Region]:
+    '''Restore the selection from the pushed fields.'''
     sel_regions = _get_fields(view)
     if not only_other:
         sel_regions.extend(view.sel())
@@ -76,11 +76,11 @@ def _restore_selection(view, only_other):
     return sel_regions
 
 
-def _execute_jump(view, jump_forward, only_other):
-    """
+def _execute_jump(view, jump_forward, only_other) -> Tuple[List[sublime.Region], int]:
+    '''
     Add the selection to the fields and move the selection to the
     next field.
-    """
+    '''
     regions = _get_fields(view)
 
     try:
@@ -109,7 +109,7 @@ def _execute_jump(view, jump_forward, only_other):
 
 
 def _subtract_selection(pushed_regions, sel_regions):
-    """Subtract the selections from the pushed fields."""
+    '''Subtract the selections from the pushed fields.'''
     for reg in pushed_regions:
         for sel in sel_regions:
             if sel.begin() <= reg.end() and reg.begin() <= sel.end():
@@ -141,7 +141,7 @@ _valid_modes = [
 
 
 class SelectionFieldsCommand(sublime_plugin.TextCommand):
-    def run(self, edit, mode="smart", jump_forward=True, only_other=False):
+    def run(self, edit, mode='smart', jump_forward=True, only_other=False) -> None:
         if mode not in _valid_modes:
             sublime.error_message(
                 f'\'{mode}\' is an invalid mode for \'selection_fields\'.\n' +
@@ -208,7 +208,7 @@ class SelectionFieldsCommand(sublime_plugin.TextCommand):
 
 
 class SelectionFieldsContext(sublime_plugin.EventListener):
-    def on_query_context(self, view, key, operator, operand, match_all):
+    def on_query_context(self, view, key, operator, operand, match_all) -> bool:
         if key not in ['is_selection_field', 'is_selection_field.added_fields',
                        'selection_fields_tab_enabled',
                        'selection_fields_escape_enabled']:

@@ -1,9 +1,10 @@
 import sublime
+from typing import Union
 
 import re
 
 
-def find_next_literal(view, pt, arg):
+def find_next_literal(view, pt, arg) -> Union[sublime.Region, None]:
     lr = view.line(pt)
     line = view.substr(sublime.Region(pt, lr.b))
     idx = line.find(arg)
@@ -13,7 +14,7 @@ def find_next_literal(view, pt, arg):
         return sublime.Region(pt_start, pt_start + len(arg))
 
 
-def find_next_re(view, pt, arg):
+def find_next_re(view, pt, arg) -> Union[sublime.Region, None]:
     lr = view.line(pt)
     line = view.substr(sublime.Region(pt, lr.b))
     try:
@@ -25,8 +26,7 @@ def find_next_re(view, pt, arg):
     if result:
         return sublime.Region(pt + result.start(), pt + result.end())
 
-
-def find_next_count(view, pt, arg):
+def find_next_count(view, pt, arg) -> Union[sublime.Region, None]:
     lr = view.line(pt)
     idx = pt + int(arg)
     if lr.a <= idx <= lr.b:
