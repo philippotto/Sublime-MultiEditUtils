@@ -1,27 +1,75 @@
 [
-  { "command": "jump_to_last_region", "caption" : "MultiEditUtils: Jump to last region" },
-  { "command": "add_last_selection", "caption" : "MultiEditUtils: Add last selection" },
-  { "command": "selection_fields", "caption": "MultiEditUtils: Selection as Fields", "args": {"mode": "toggle"} },
-  { "command": "selection_fields", "caption": "MultiEditUtils: Selection as Fields - Add Selections to Fields", "args": {"mode": "add"} },
-  { "command": "cycle_through_regions", "caption" : "MultiEditUtils: Cycle through regions" },
-  { "command": "normalize_region_ends", "caption" : "MultiEditUtils: Normalize region ends" },
-  { "command": "split_selection", "caption" : "MultiEditUtils: Split selection" },
-  { "command": "strip_selection", "caption" : "MultiEditUtils: Strip Selection" },
-  { "command": "remove_empty_regions", "caption" : "MultiEditUtils: Remove Empty Regions" },
-  { "command": "multi_find_menu", "caption" : "MultiEditUtils: Find All" },
-  { "command": "multi_find_regex", "caption" : "MultiEditUtils: Find (Regex)" },
-  { "command": "preserve_case", "caption" : "MultiEditUtils: Preserve Case" },
-  { "command": "stash_region_selections", "caption": "MultiEditUtils: Stash Selections"},
-  { "command": "pop_region_selections", "caption": "MultiEditUtils: Pop Selections"},
-  { "command": "clear_stashed_selections", "caption": "MultiEditUtils: Clear Stashed Selections"},
-  {"command": "jump_to_interactive", "caption": "MultiEditUtils: Jump to interactive"},
-  {"command": "jump_to_interactive", "args": { "extend": true }, "caption": "MultiEditUtils: Expand Selection to ..."},
   {
-        "caption": "Preferences: MultiEditUtils Settings...",
-        "command": "edit_settings",
-        "args": {
-            "base_file": "${packages}/MultiEditUtils/MultiEditUtils.sublime-settings",
-            "default": "{\n\t$0\n}\n"
-        }
+    "command": "jump_to_last_region",
+    "caption": "MultiEditUtils: Jump to last region"
+  },
+  {
+    "command": "add_last_selection",
+    "caption": "MultiEditUtils: Add last selection"
+  },
+  {
+    "command": "selection_fields",
+    "caption": "MultiEditUtils: Selection as Fields",
+    "args": {
+      "mode": "toggle"
+    }
+  },
+  {
+    "command": "selection_fields",
+    "caption": "MultiEditUtils: Selection as Fields - Add Selections to Fields",
+    "args": {
+      "mode": "add"
+    }
+  },
+  {
+    "command": "cycle_through_regions",
+    "caption": "MultiEditUtils: Cycle through regions"
+  },
+  {
+    "command": "normalize_region_ends",
+    "caption": "MultiEditUtils: Normalize region ends"
+  },
+  {
+    "command": "split_selection",
+    "caption": "MultiEditUtils: Split selection"
+  },
+  {
+    "command": "strip_selection",
+    "caption": "MultiEditUtils: Strip Selection"
+  },
+  {
+    "command": "remove_empty_regions",
+    "caption": "MultiEditUtils: Remove Empty Regions"
+  },
+  {
+    "command": "multi_find_menu",
+    "caption": "MultiEditUtils: Find All"
+  },
+  {
+    "command": "multi_find_regex",
+    "caption": "MultiEditUtils: Find (Regex)"
+  },
+  {
+    "command": "preserve_case",
+    "caption": "MultiEditUtils: Preserve Case"
+  },
+  {
+    "command": "jump_to_interactive",
+    "caption": "MultiEditUtils: Jump to interactive"
+  },
+  {
+    "command": "jump_to_interactive",
+    "args": {
+      "extend": true
+    },
+    "caption": "MultiEditUtils: Expand Selection to ..."
+  },
+  {
+    "caption": "Preferences: MultiEditUtils Settings...",
+    "command": "edit_settings",
+    "args": {
+      "base_file": "${packages}/MultiEditUtils/MultiEditUtils.sublime-settings",
+      "default": "{\n\t$0\n}\n"
+    }
   }
 ]

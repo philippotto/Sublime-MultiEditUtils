@@ -81,7 +81,9 @@ class MultiFindAllCommand(sublime_plugin.TextCommand):
             for region in regions:
                 view.sel().add(region)
         else:
-            view.window().status_message("Multi Find All: nothing selected")
+            window = view.window()
+            if window:
+                window.status_message("Multi Find All: nothing selected")
             for sel in initial:
                 view.sel().add(sel)
             return
@@ -389,83 +391,6 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
         self.clear_split_regions()
 
 
-class StashRegionSelectionsCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        stashed_regions = self.view.settings().get('meu_pop_stashed_regions', {})
-        next_key = str(uuid.uuid4())
-
-        regions = self.view.sel()
-        self.view.add_regions(f'meu_pop_stashed_regions_{next_key}', regions,
-                              f'meu_pop_stashed_regions_{next_key}', '',
-                              sublime.HIDDEN | sublime.PERSISTENT)
-
-        stashed_regions[
-            f'{next_key}'] = f'Total of <strong>{len(regions)}</strong> selections|Stashed at: {str(datetime.now())}'
-
-        self.view.settings().set('meu_pop_stashed_regions', stashed_regions)
-        self.view.sel().clear()
-
-
-class PopRegionSelectionsCommand(sublime_plugin.TextCommand):
-    def run(self, edit, index):
-        self.pop_regions(index, True)
-
-    def pop_regions(self, key, clear):
-        if key == -1:
-            return
-
-        popped_regions = self.view.get_regions(
-            f'meu_pop_stashed_regions_{key}')
-        if clear:
-            self.view.sel().clear()
-
-        self.view.sel().add_all(popped_regions)
-        self.view.erase_regions(
-            f'meu_pop_stashed_regions_{key}')
-        stashed_regions = self.view.settings().get('meu_pop_stashed_regions', {})
-        stashed_regions.pop(key)
-        self.view.settings().set('meu_pop_stashed_regions', stashed_regions)
-
-    def input(self, args):
-        return StashListInputHandler(self.view)
-
-    def is_visible(self):
-        return bool(self.view.settings().get('meu_pop_stashed_regions', {}))
-
-
-class ClearStashedSelectionsCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        self.view.settings().erase('meu_pop_stashed_regions')
-
-
-class StashListInputHandler(sublime_plugin.ListInputHandler):
-    def __init__(self, view):
-        self.view = view
-
-    def name(self):
-        return 'index'
-
-    def list_items(self):
-        stashed_regions = self.view.settings().get('meu_pop_stashed_regions', {})
-        options = [
-            sublime.ListInputItem(f'Item: {key}', key, f'<em>{stashed_regions[key].split("|")[0]}</em>', stashed_regions[key].split('|')[1]) for key in stashed_regions.keys()
-        ]
-        return options
-
-    def preview(self, args):
-        regions = self.view.get_regions(f'meu_pop_stashed_regions_{args}')
-        self.view.erase_regions('meu_pop_stashed_region_preview')
-        self.view.add_regions('meu_pop_stashed_region_preview',
-                              regions, 'region.cyanish', '', sublime.DRAW_NO_FILL)
-
-    def cancel(self):
-        self.view.erase_regions('meu_pop_stashed_region_preview')
-
-    def validate(self, args):
-        self.view.erase_regions('meu_pop_stashed_region_preview')
-        return True
-
-
 Case = namedtuple("Case", "lower upper capitalized mixed")(1, 2, 3, 4)
 StringMetaData = namedtuple("StringMetaData", "separator cases stringGroups")
 
@@ -539,8 +464,6 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
         return StringMetaData(separator, cases, stringGroups)
 
     def splitByCase(self, aString):
-        # split at the change from lower to upper case (or vice versa)
-        # groups = re.split('(?<!^)((?:[^A-Z][A-Z])|(?:[A-Z]{2,}[^A-Z]))', aString)
         groups = re.split('(?<!^)((?:[^A-Z][^a-z])|(?:[^a-z][^A-Z]))', aString)
         newGroups = [groups[0]]
         for index, group in enumerate(groups):
@@ -711,16 +634,21 @@ class JumpToInteractiveCommand(sublime_plugin.WindowCommand):
                                   self.ADDREGIONS_SCOPE, "", self.ADDREGIONS_FLAGS)
 
     def _on_done(self, text):
+        view = self.view
         self._show_highlight(None)
         # Run the command to create a proper undo point
         args = self.params.copy()
         args['text'] = text
-        self.view.run_command("jump_to", args)
+        if view:
+            view.run_command("jump_to", args)
 
     def _on_change(self, text):
+        view = self.view
+
         regions = list(get_new_regions(self.view, text, **self.params))
         if self.params['create_new']:
-            regions += list(self.view.sel())
+            if view:
+                regions += list(view.sel())
         self._show_highlight(tuple(regions))
 
     def _on_cancel(self):
