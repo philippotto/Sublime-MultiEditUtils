@@ -1,8 +1,6 @@
 import sublime
 import sublime_plugin
 import re
-from datetime import datetime
-import uuid
 import html
 from collections import namedtuple
 
