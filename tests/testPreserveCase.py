@@ -23,7 +23,7 @@ class TestPreserveCase(TestCase):
 
     if self.view:
       self.view.set_scratch(True)
-      self.view.window().run_command("close_file")
+      self.view.window().run_command('close_file')
 
   def assertListEqual(self, listA, listB):
 
@@ -35,46 +35,46 @@ class TestPreserveCase(TestCase):
 
   def testAnalyzeString(self):
 
-    meta = self.cmd.analyzeString("a-BU-Cap-MiX")
+    meta = self.cmd.analyzeString('a-BU-Cap-MiX')
 
     Case = MultiEditUtils.Case
 
-    self.assertEqual(meta.separator, "-")
+    self.assertEqual(meta.separator, '-')
     self.assertListEqual(meta.cases, [Case.lower, Case.upper, Case.capitalized, Case.mixed])
-    self.assertListEqual(meta.stringGroups, ["a", "BU", "Cap", "MiX"])
+    self.assertListEqual(meta.stringGroups, ['a', 'BU', 'Cap', 'MiX'])
 
 
   def testSplitByCase(self):
 
-    self.assertListEqual(self.cmd.splitByCase("abcDefGhi"), ["abc", "Def", "Ghi"])
-    self.assertListEqual(self.cmd.splitByCase("AbcDefGhi"), ["Abc", "Def", "Ghi"])
-    self.assertListEqual(self.cmd.splitByCase("AbcDEF"), ["Abc", "DEF"])
-    self.assertListEqual(self.cmd.splitByCase("ABCDef"), ["ABCD", "ef"])
-    self.assertListEqual(self.cmd.splitByCase("AbcDEFGhi"), ["Abc", "DEFG", "hi"])
+    self.assertListEqual(self.cmd.splitByCase('abcDefGhi'), ['abc', 'Def', 'Ghi'])
+    self.assertListEqual(self.cmd.splitByCase('AbcDefGhi'), ['Abc', 'Def', 'Ghi'])
+    self.assertListEqual(self.cmd.splitByCase('AbcDEF'), ['Abc', 'DEF'])
+    self.assertListEqual(self.cmd.splitByCase('ABCDef'), ['ABCD', 'ef'])
+    self.assertListEqual(self.cmd.splitByCase('AbcDEFGhi'), ['Abc', 'DEFG', 'hi'])
 
 
 
   def testReplaceStringWithCase_Equal(self):
 
-    oldString = "test-TEST-Test"
-    newStringGroups = ["case", "case", "case"]
+    oldString = 'test-TEST-Test'
+    newStringGroups = ['case', 'case', 'case']
     replacedString = self.cmd.replaceStringWithCase(oldString, newStringGroups)
 
-    self.assertEqual(replacedString, "case-CASE-Case")
+    self.assertEqual(replacedString, 'case-CASE-Case')
 
   def testReplaceStringWithCase_Less(self):
 
-    oldString = "test-TEST-Test"
-    newStringGroups = ["case", "case"]
+    oldString = 'test-TEST-Test'
+    newStringGroups = ['case', 'case']
     replacedString = self.cmd.replaceStringWithCase(oldString, newStringGroups)
 
-    self.assertEqual(replacedString, "case-CASE")
+    self.assertEqual(replacedString, 'case-CASE')
 
 
   def testReplaceStringWithCase_More(self):
 
-    oldString = "test-TEST-Test"
-    newStringGroups = ["case", "case", "case", "case"]
+    oldString = 'test-TEST-Test'
+    newStringGroups = ['case', 'case', 'case', 'case']
     replacedString = self.cmd.replaceStringWithCase(oldString, newStringGroups)
 
-    self.assertEqual(replacedString, "case-CASE-Case-Case")
+    self.assertEqual(replacedString, 'case-CASE-Case-Case')

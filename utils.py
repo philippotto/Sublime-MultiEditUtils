@@ -19,8 +19,8 @@ def find_next_re(view, pt, arg):
     try:
         result = re.search(arg, line)
     except Exception:
-        sublime.status_message("JumpTo: Error in regular expression!")
-        return
+        sublime.status_message('JumpTo: Error in regular expression!')
+        return None
 
     if result:
         return sublime.Region(pt + result.start(), pt + result.end())
@@ -34,9 +34,9 @@ def find_next_count(view, pt, arg):
 
 
 MATCHERS = [
-    (r"\[(.+)\]", find_next_literal),
-    (r"/(.+)/", find_next_re),
-    (r"\{(-?\d+)\}", find_next_count),
+    (r'\[(.+)\]', find_next_literal),
+    (r'/(.+)/', find_next_re),
+    (r'\{(-?\d+)\}', find_next_count),
 ]
 
 

@@ -7,19 +7,19 @@ from collections import namedtuple
 from .selection_fields import get_settings
 from .utils import get_new_regions
 
-COMMENT_SELECTOR = "comment - punctuation.definition.comment"
+COMMENT_SELECTOR = 'comment - punctuation.definition.comment'
 
 MULTI_FIND_MENU = [
-    sublime.ListInputItem("Case +    Word +", 0,
+    sublime.ListInputItem('Case +    Word +', 0,
                           '<strong>Matches:</strong> <em>case, word</em>'),
-    sublime.ListInputItem("Case +    Word -",
+    sublime.ListInputItem('Case +    Word -',
                           1, '<strong>Matches:</strong> <em>case</em> <strong>Ignores:</strong> <em>word</em>'),
-    sublime.ListInputItem("Case -    Word +",
+    sublime.ListInputItem('Case -    Word +',
                           2, '<strong>Matches:</strong> <em>word</em> <strong>Ignores:</strong> <em>case</em>'),
-    sublime.ListInputItem("Case -    Word -",
+    sublime.ListInputItem('Case -    Word -',
                           3, '<strong>Ignores:</strong> <em>case, word</em>'),
     sublime.ListInputItem(
-        "Case +    Word +  Comments -", 4, '<strong>Matches:</strong> <em>case, word</em>\t<strong>Ignores:</strong> <em>matches inside comments</em>')
+        'Case +    Word +  Comments -', 4, '<strong>Matches:</strong> <em>case, word</em>\t<strong>Ignores:</strong> <em>matches inside comments</em>')
 ]
 
 
@@ -28,18 +28,18 @@ class MultiFindMenuCommand(sublime_plugin.TextCommand):
     def run(self, edit, operation):
         if operation == 0:
             self.view.run_command(
-                'multi_find_all', {"case": True, "word": True})
+                'multi_find_all', {'case': True, 'word': True})
         elif operation == 1:
-            self.view.run_command('multi_find_all', {"case": True})
+            self.view.run_command('multi_find_all', {'case': True})
         elif operation == 2:
             self.view.run_command(
-                'multi_find_all', {"case": False, "word": True})
+                'multi_find_all', {'case': False, 'word': True})
         elif operation == 3:
-            self.view.run_command('multi_find_all', {"case": False})
+            self.view.run_command('multi_find_all', {'case': False})
         elif operation == 4:
             self.view.run_command(
-                'multi_find_all', {"case": True, "word": True,
-                                   "ignore_comments": True})
+                'multi_find_all', {'case': True, 'word': True,
+                                   'ignore_comments': True})
 
     def input(self, args):
         return MultiFindInputHandler()
@@ -47,7 +47,7 @@ class MultiFindMenuCommand(sublime_plugin.TextCommand):
 
 class MultiFindInputHandler(sublime_plugin.ListInputHandler):
     def name(self):
-        return "operation"
+        return 'operation'
 
     def list_items(self):
         return MULTI_FIND_MENU
@@ -81,7 +81,7 @@ class MultiFindAllCommand(sublime_plugin.TextCommand):
         else:
             window = view.window()
             if window:
-                window.status_message("Multi Find All: nothing selected")
+                window.status_message('Multi Find All: nothing selected')
             for sel in initial:
                 view.sel().add(sel)
             return
@@ -142,7 +142,7 @@ class OperationInputHandler(sublime_plugin.ListInputHandler):
         self.view = view
 
     def name(self):
-        return "subtractive"
+        return 'subtractive'
 
     def list_items(self):
         return [
@@ -169,17 +169,17 @@ class ExpressionInputHandler(sublime_plugin.TextInputHandler):
     def preview(self, value):
         if value == '':
             self.view.erase_regions('meu_expression_preview')
-            return
+            return None
 
-        operation = "Subtractive" if self.args.get(
-            "subtractive", False) else "Additive"
+        operation = 'Subtractive' if self.args.get(
+            'subtractive', False) else 'Additive'
 
-        if operation == "Additive":
+        if operation == 'Additive':
             preview_scope = get_settings(
-                "find.regex.additive.scope", 'region.greenish')
+                'find.regex.additive.scope', 'region.greenish')
         else:
             preview_scope = get_settings(
-                "find.regex.subtractive.scope", 'region.redish')
+                'find.regex.subtractive.scope', 'region.redish')
 
         regions = self.view.find_all(value, 0)
 
@@ -324,9 +324,9 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, separator=None):
         self.live_split_preview = get_settings(
-            "live_split_selection.enabled", True)
+            'live_split_selection.enabled', True)
         self.live_split_preview_scope = get_settings(
-            "live_split_selection.scope", 'region.cyanish')
+            'live_split_selection.scope', 'region.cyanish')
 
         self.savedSelection = [r for r in self.view.sel()]
 
@@ -335,21 +335,21 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
         )
         if selectionSize == 0:
             # nothing to do
-            sublime.status_message("Cannot split an empty selection.")
+            sublime.status_message('Cannot split an empty selection.')
             return
 
         if separator is not None:
             self.split_selection(False, separator)
         else:
             inputView = sublime.active_window().show_input_panel(
-                "Separating character(s) for splitting the selection",
-                " ",
+                'Separating character(s) for splitting the selection',
+                ' ',
                 lambda x: self.split_selection(False,  x),
                 lambda x: self.split_selection(self.live_split_preview, x),
                 self.clear_split_regions
             )
 
-            inputView.run_command("select_all")
+            inputView.run_command('select_all')
 
     def clear_split_regions(self):
         self.view.erase_regions('meu_split_preview')
@@ -377,7 +377,10 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
                 currentPosition += len(subRegion) + len(separator)
 
         if preview:
-            view.add_regions('meu_split_preview', [s for s in new_regions], self.live_split_preview_scope, '',
+            view.add_regions('meu_split_preview',
+                             [s for s in new_regions],
+                             self.live_split_preview_scope,
+                             '',
                              sublime.DRAW_NO_FILL | sublime.PERSISTENT)
             return
 
@@ -389,8 +392,8 @@ class SplitSelectionCommand(sublime_plugin.TextCommand):
         self.clear_split_regions()
 
 
-Case = namedtuple("Case", "lower upper capitalized mixed")(1, 2, 3, 4)
-StringMetaData = namedtuple("StringMetaData", "separator cases stringGroups")
+Case = namedtuple('Case', 'lower upper capitalized mixed')(1, 2, 3, 4)
+StringMetaData = namedtuple('StringMetaData', 'separator cases stringGroups')
 
 
 class PreserveCaseCommand(sublime_plugin.TextCommand):
@@ -408,7 +411,7 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
         )
         if selectionSize == 0:
             sublime.status_message(
-                "Cannot run preserve case on an empty selection.")
+                'Cannot run preserve case on an empty selection.')
             return
 
         if newString is not None:
@@ -416,23 +419,23 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
         else:
             firstRegionString = self.view.substr(self.savedSelection[0])
             inputView = sublime.active_window().show_input_panel(
-                "New string for preserving case",
+                'New string for preserving case',
                 firstRegionString,
                 self.runPreserveCase,
                 None,
                 None
             )
-            inputView.run_command("select_all")
+            inputView.run_command('select_all')
 
     def runPreserveCase(self, newString):
         selections = [[s.a, s.b] for s in self.savedSelection]
         self.view.run_command(
-            "preserve_case", {"newString": newString, "selections": selections})
+            'preserve_case', {'newString': value, 'selections': selections})
 
-    def preserveCase(self, newString):
+    def preserveCase(self, value) -> None:
         view = self.view
         regionOffset = 0
-        newStringGroups = self.analyzeString(newString).stringGroups
+        newStringGroups = self.analyzeString(value).stringGroups
 
         for region in self.savedSelection:
             region = sublime.Region(
@@ -462,7 +465,7 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
         return StringMetaData(separator, cases, stringGroups)
 
     def splitByCase(self, aString):
-        groups = re.split('(?<!^)((?:[^A-Z][^a-z])|(?:[^a-z][^A-Z]))', aString)
+        groups = re.split('(?<!^)((?:[^A-Z][^a-z])|(?:[^a-z][^A-Z]))', value)
         newGroups = [groups[0]]
         for index, group in enumerate(groups):
             if index % 2 == 1:
@@ -472,15 +475,15 @@ class PreserveCaseCommand(sublime_plugin.TextCommand):
         return newGroups
 
     def analyzeCase(self, aString):
-        lowerReg = re.compile("^[^A-Z]*$")
-        upperReg = re.compile("^[^a-z]*$")
-        capitalizedReg = re.compile("^[A-Z]([^A-Z])*$")
+        lowerReg = re.compile('^[^A-Z]*$')
+        upperReg = re.compile('^[^a-z]*$')
+        capitalizedReg = re.compile('^[A-Z]([^A-Z])*$')
 
-        if lowerReg.match(aString):
+        if lowerReg.match(value):
             return Case.lower
-        elif upperReg.match(aString):
+        elif upperReg.match(value):
             return Case.upper
-        elif capitalizedReg.match(aString):
+        elif capitalizedReg.match(value):
             return Case.capitalized
         else:
             return Case.mixed
@@ -611,16 +614,20 @@ class JumpToInteractiveCommand(sublime_plugin.WindowCommand):
     ADDREGIONS_FLAGS = sublime.DRAW_EMPTY | sublime.DRAW_OUTLINED
 
     def run(self, text="", extend=False, create_new=False, whole_match=False):
-        self.params = {'extend': extend, 'create_new': create_new, 'whole_match': whole_match}
+        self.params = {
+            'extend': extend,
+            'create_new': create_new,
+            'whole_match': whole_match
+        }
         self.view = self.window.active_view()
 
         if extend:
-            prompt = "Expand selection to"
+            prompt = 'Expand selection to'
         elif create_new:
-            prompt = "Create caret at"
+            prompt = 'Create caret at'
         else:
-            prompt = "Jump to"
-        prompt += " (chars or [chars] or {count} or /regex/):"
+            prompt = 'Jump to'
+        prompt += ' (chars or [chars] or {count} or /regex/):'
 
         self.window.show_input_panel(prompt, text, self._on_done, self._on_change, self._on_cancel)
 
@@ -636,9 +643,9 @@ class JumpToInteractiveCommand(sublime_plugin.WindowCommand):
         self._show_highlight(None)
         # Run the command to create a proper undo point
         args = self.params.copy()
-        args['text'] = text
+        args['text'] = value
         if view:
-            view.run_command("jump_to", args)
+            view.run_command('jump_to', args)
 
     def _on_change(self, text):
         view = self.view
