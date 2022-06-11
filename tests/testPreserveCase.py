@@ -4,12 +4,8 @@ from unittest import TestCase
 import os.path, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
-from importlib.util import spec_from_loader, module_from_spec
-from importlib.machinery import SourceFileLoader 
+import MultiEditUtils.MultiEditUtils
 
-spec = spec_from_loader("MultiEditUtils", SourceFileLoader("MultiEditUtils", "../MultiEditUtils.py"))
-MultiEditUtils = module_from_spec(spec)
-spec.loader.exec_module(MultiEditUtils)
 
 class TestPreserveCase(TestCase):
 
