@@ -2,10 +2,10 @@ import sublime
 from unittest import TestCase
 
 import os.path, sys
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
-import MultiEditUtils.MultiEditUtils
+from importlib import import_module
 
+tabfilter = import_module(".MultiEditUtils", "MultiEditUtils")
 
 class TestPreserveCase(TestCase):
 
