@@ -5,7 +5,7 @@ import os.path, sys
 
 from importlib import import_module
 
-tabfilter = import_module(".MultiEditUtils", "MultiEditUtils")
+MultiEditUtils = import_module(".MultiEditUtils", "MultiEditUtils")
 
 class TestPreserveCase(TestCase):
 
