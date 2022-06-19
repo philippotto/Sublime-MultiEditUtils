@@ -1,16 +1,11 @@
 import sublime
 from unittest import TestCase
-version = sublime.version()
 
 import os.path, sys
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
-version = sublime.version()
-if int(version) > 3000:
-  from MultiEditUtils import MultiEditUtils
-else:
-  import MultiEditUtils
+from importlib import import_module
 
+MultiEditUtils = import_module(".MultiEditUtils", "MultiEditUtils")
 
 class TestPreserveCase(TestCase):
 

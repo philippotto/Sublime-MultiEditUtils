@@ -1,4 +1,4 @@
-Sublime MultiEditUtils [![Build Status](https://travis-ci.org/philippotto/Sublime-MultiEditUtils.svg?branch=master)](https://travis-ci.org/philippotto/Sublime-MultiEditUtils)
+Sublime MultiEditUtils [![test](https://github.com/philippotto/Sublime-MultiEditUtils/actions/workflows/test.yaml/badge.svg)](https://github.com/philippotto/Sublime-MultiEditUtils/actions/workflows/test.yaml)
 ==============
 
 A Sublime Text 2/3 Plugin which enhances editing of multiple selections. In case you aren't familar with Sublime's awesome multiple selection features, visit [this page](https://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html).
